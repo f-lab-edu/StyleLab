@@ -21,4 +21,4 @@
 Java 11, Spring Boot, Spring Data JPA, QueryDSL JPA, MySQL 8, Github Actions
 
 # [💾 StyleLab ERD](https://www.erdcloud.com/d/eACgzLZ7bAuh4Q46i)
-# [📔 StyleLab API 명세서](https://fringe-actress-f29.notion.site/API-067ba533d0d443ffad09c29c9d6cf4fe?pvs=4)
+# [📔 StyleLab API 명세서](https://fringe-actress-f29.notion.site/API-067ba533d0d443ffad09c29c9d6cf4fe?pvs=4)
