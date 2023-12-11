@@ -18,7 +18,7 @@
 - **대용량 트래픽에서도 안정적인 서비스를 제공할 수 있는 설계를 구축하는 것입니다.**
 
 # 기술 스택
+Java 11, Spring Boot, Spring Data JPA, QueryDSL JPA, MySQL 8, Github Actions
 
-Java 11, Spring Boot, Spring Data JPA, QueryDSL JPA, MySQL 8, Jekins
-
-# [StyleLab ERD](https://www.erdcloud.com/d/eACgzLZ7bAuh4Q46i)
+# [💾 StyleLab ERD](https://www.erdcloud.com/d/eACgzLZ7bAuh4Q46i)
+# [📔 StyleLab API 명세서](https://fringe-actress-f29.notion.site/API-067ba533d0d443ffad09c29c9d6cf4fe?pvs=4)
