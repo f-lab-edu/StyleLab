@@ -20,5 +20,9 @@
 # 기술 스택
 Java 11, Spring Boot, Spring Data JPA, QueryDSL JPA, MySQL 8, Github Actions
 
+# 개발 기술 블로그
+- [GitHub Actions를 사용하여 개발 생산성을 높이기 위한 CI/CD pipeline 구축](https://rbsks.tistory.com/66)
+- [MySQL 서버 구축](https://rbsks.tistory.com/65)
+
 # [💾 StyleLab ERD](https://www.erdcloud.com/d/eACgzLZ7bAuh4Q46i)
 # [📔 StyleLab API 명세서](https://fringe-actress-f29.notion.site/API-067ba533d0d443ffad09c29c9d6cf4fe?pvs=4)
