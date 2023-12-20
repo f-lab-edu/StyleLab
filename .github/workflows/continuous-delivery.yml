@@ -20,7 +20,7 @@ jobs:
       uses: samin/mysql-action@v1.1
       with:
         mysql database: ${{ secrets.MYSQL_DATABASE }}
-        mysql user: ${{ secrets.MYSQL_USER }}"
+        mysql user: ${{ secrets.MYSQL_USER }}
         mysql password: ${{ secrets.MYSQL_PASSWORD }}
         
     - name: Grant execute permission for gradlew
