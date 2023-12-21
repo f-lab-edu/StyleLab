@@ -39,6 +39,9 @@ out/
 ### .DS_Store ###
 *.DS_Store
 
+### log ###
+*.log
+
 ### yml ###
 /src/main/resources/application-local.yml
 /src/main/resources/application-dev.yml
