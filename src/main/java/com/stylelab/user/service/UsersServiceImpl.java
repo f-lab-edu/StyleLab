@@ -35,4 +35,14 @@ public class UsersServiceImpl implements UsersService {
             throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), runtimeException);
         }
     }
+
+    @Override
+    public boolean existsByEmail(final String email) {
+        return usersRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByNickname(final String nickname) {
+        return usersRepository.existsByNickname(nickname);
+    }
 }

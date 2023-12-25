@@ -18,6 +18,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Payload;
 import javax.validation.metadata.ConstraintDescriptor;
 import java.util.Objects;
@@ -76,6 +77,43 @@ public class ServiceExceptionHandler {
                         "%s",
                         ObjectUtils.isEmpty(ex.getApplicationException()) ? response.getMessage() : ex.getApplicationException().getMessage()));
         log.error(response.getMessage(), ex.getCause());
+        return new ResponseEntity<>(response, response.getStatus());
+    }
+
+    /**
+     * ConstraintViolationException Handler
+     *
+     * @param ex ConstraintViolationException
+     * @return ResponseEntity<ApiResDto<Void>>
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleConstraintViolationException(ConstraintViolationException ex) {
+        CommonError commonError = null;
+        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+            ConstraintDescriptor<?> constraintDescriptor = constraintViolation.unwrap(ConstraintViolation.class).getConstraintDescriptor();
+            Set<Class<? extends Payload>> payloads = constraintDescriptor.getPayload();
+            if (!payloads.isEmpty()) {
+                Class<? extends Payload> payload = payloads.iterator().next();
+                commonError = serviceErrorHandlerMap.getErrorHandlerMap().get(payload.getName())
+                        .of(constraintViolation.getMessage());
+                break;
+            }
+        }
+
+        ApiResponse<Void> response;
+        if (commonError == null) {
+            response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST);
+            response.setMessage(String.format("%s", ex.getMessage()));
+        } else {
+            response = ApiResponse.<Void>builder()
+                    .status(commonError.getHttpStatus())
+                    .code(commonError.getCode())
+                    .message(commonError.getMessage())
+                    .build();
+        }
+
+        log.error(response.getMessage(), ex);
         return new ResponseEntity<>(response, response.getStatus());
     }
 

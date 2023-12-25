@@ -14,7 +14,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UsersServiceTest {
@@ -46,6 +46,10 @@ public class UsersServiceTest {
             // when
             assertThrows(ServiceException.class,
                     () -> usersService.signup(users));
+
+            // then
+            verify(usersRepository, times(1))
+                    .save(any());
         }
 
         @Test
@@ -65,6 +69,10 @@ public class UsersServiceTest {
             // when
             assertThrows(ServiceException.class,
                     () -> usersService.signup(users));
+
+            // then
+            verify(usersRepository, times(1))
+                    .save(any());
         }
     }
 }

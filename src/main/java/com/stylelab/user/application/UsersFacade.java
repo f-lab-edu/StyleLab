@@ -22,10 +22,19 @@ public class UsersFacade {
 
     public void signup(final SignupRequestDto signupRequestDto) {
         if (!Objects.equals(signupRequestDto.getPassword(), signupRequestDto.getConfirmPassword())) {
+            log.error(PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
             throw new UsersException(PASSWORD_VERIFICATION_NOT_MATCH, PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
         }
 
         String encodePassword = passwordEncoder.encode(signupRequestDto.getPassword());
         usersService.signup(SignupRequestDto.toEntity(signupRequestDto, encodePassword));
+    }
+
+    public boolean existsByEmail(final String email) {
+        return usersService.existsByEmail(email);
+    }
+
+    public boolean existsByNickname(final String nickname) {
+        return usersService.existsByNickname(nickname);
     }
 }
