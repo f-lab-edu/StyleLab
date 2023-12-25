@@ -53,7 +53,12 @@ public class WebSecurityConfiguration {
                 .httpBasic().disable()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/v1/signup").permitAll()
+                .antMatchers(
+                        "/v1/users/signup",
+                        "/v1/users/check-email",
+                        "/v1/users/check-nickname"
+                ).permitAll()
+                .anyRequest().authenticated()
                 .and()
                 .build();
     }
