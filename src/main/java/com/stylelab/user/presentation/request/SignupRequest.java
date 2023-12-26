@@ -15,7 +15,7 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SignupRequestDto {
+public class SignupRequest {
 
     @NotBlank(message = "EMAIL_IS_REQUIRED", payload = UsersError.class)
     @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}", message = "EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT", payload = UsersError.class)
@@ -41,13 +41,13 @@ public class SignupRequestDto {
     @Pattern(regexp = "^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$", message = "PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT", payload = UsersError.class)
     private String phoneNumber;
 
-    public static Users toEntity(SignupRequestDto signupRequestDto, String encodePassword) {
+    public static Users toEntity(SignupRequest signupRequest, String encodePassword) {
         return Users.builder()
-                .email(signupRequestDto.getEmail())
+                .email(signupRequest.getEmail())
                 .password(encodePassword)
-                .name(signupRequestDto.getName())
-                .nickname(signupRequestDto.getNickname())
-                .phoneNumber(signupRequestDto.getPhoneNumber())
+                .name(signupRequest.getName())
+                .nickname(signupRequest.getNickname())
+                .phoneNumber(signupRequest.getPhoneNumber())
                 .role(UsersRole.ROLE_USER)
                 .build();
     }

@@ -2,7 +2,7 @@ package com.stylelab.user.presentation.application;
 
 import com.stylelab.common.exception.ServiceException;
 import com.stylelab.user.application.UsersFacade;
-import com.stylelab.user.presentation.request.SignupRequestDto;
+import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.service.UsersService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +34,7 @@ public class UsersFacadeTest {
         @DisplayName("회원 가입 실패 - 비밀번호와 비밀번호 확인 값이 다른 경우")
         public void failureSignup_01() {
             // given
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail..com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@!")
@@ -45,7 +45,7 @@ public class UsersFacadeTest {
 
             // when
             assertThrows(ServiceException.class,
-                    () -> usersFacade.signup(signupRequestDto));
+                    () -> usersFacade.signup(signupRequest));
 
             // then
             verify(usersService, times(0))

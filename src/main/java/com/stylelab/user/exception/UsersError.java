@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-import javax.validation.Payload;
 import java.util.Arrays;
 
 @Getter

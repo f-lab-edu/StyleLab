@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Map;
 
-import static com.stylelab.common.exception.ErrorHandler.*;
+import static com.stylelab.common.exception.ErrorHandler.USERS_ERROR;
 
 @Configuration
 public class BeanConfiguration {

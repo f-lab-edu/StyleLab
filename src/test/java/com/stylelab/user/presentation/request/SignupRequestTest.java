@@ -16,7 +16,7 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class SignupRequestDtoTest {
+public class SignupRequestTest {
 
     private Validator validator;
 
@@ -30,11 +30,11 @@ public class SignupRequestDtoTest {
     @DisplayName("회원 가입 이메일 검증")
     public class EmailValidation {
 
-        private SignupRequestDto signupRequestDto;
+        private SignupRequest signupRequest;
 
         @BeforeEach
         public void init() {
-            signupRequestDto = SignupRequestDto.builder()
+            signupRequest = SignupRequest.builder()
                     .password("test12341234!")
                     .name("한규빈")
                     .nickname("coby")
@@ -45,32 +45,32 @@ public class SignupRequestDtoTest {
         @Test
         @DisplayName("정삭적인 이메일 형식으로 검증 성공")
         public void successEmailValidation() {
-            signupRequestDto.setEmail("coby@gmail.com");
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            signupRequest.setEmail("coby@gmail.com");
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(0, validate.size());
         }
 
         @Test
         @DisplayName("이메일 검증 실패 - . 이 두 개인 경우 검증 실패")
         public void failureEmailValidation_01() {
-            signupRequestDto.setEmail("coby@..com");
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            signupRequest.setEmail("coby@..com");
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("이메일 검증 실패 -  @가 두 개인 경우 검증 실패")
         public void failureEmailValidation_02() {
-            signupRequestDto.setEmail("coby@@gmail.com");
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            signupRequest.setEmail("coby@@gmail.com");
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("이메일 검증 실패 -  이메일이 null 인 경우 검증 실패")
         public void failureEmailValidation_03() {
-            signupRequestDto.setEmail(null);
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            signupRequest.setEmail(null);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
     }
@@ -79,11 +79,11 @@ public class SignupRequestDtoTest {
     @DisplayName("회원 가입 비밀번호 검증")
     public class PasswordValidation {
 
-        private SignupRequestDto signupRequestDto;
+        private SignupRequest signupRequest;
 
         @BeforeEach
         public void init() {
-            signupRequestDto = SignupRequestDto.builder()
+            signupRequest = SignupRequest.builder()
                     .email("coby@gamil.com")
                     .name("한규빈")
                     .nickname("coby")
@@ -94,90 +94,90 @@ public class SignupRequestDtoTest {
         @Test
         @DisplayName("정상적인 비밀번호 형식으로 검증 성공")
         public void successPasswordValidation() {
-            signupRequestDto.setPassword("Test12345678!");
+            signupRequest.setPassword("Test12345678!");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(0, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호가 8자리 미만 시 검증 실패")
         public void failurePasswordValidation_01() {
-            signupRequestDto.setPassword("test123");
+            signupRequest.setPassword("test123");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호가 16자리 이상 시 검증 실패")
         public void failurePasswordValidation_02() {
-            signupRequestDto.setPassword("test123!12344543213153");
+            signupRequest.setPassword("test123!12344543213153");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 숫자만 들어간 경우 검증 실패")
         public void failurePasswordValidation_03() {
-            signupRequestDto.setPassword("123456789");
+            signupRequest.setPassword("123456789");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 문자만 들어간 경우 검증 실패")
         public void failurePasswordValidation_04() {
-            signupRequestDto.setPassword("testteset");
+            signupRequest.setPassword("testteset");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 특수문자만 들어간 경우 검증 실패")
         public void failurePasswordValidation_05() {
-            signupRequestDto.setPassword("!@#!@#!@#@#!");
+            signupRequest.setPassword("!@#!@#!@#@#!");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 한글이 들어간 경우 검증 실패")
         public void failurePasswordValidation_06() {
-            signupRequestDto.setPassword("테스트테스트테테");
+            signupRequest.setPassword("테스트테스트테테");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 숫자, 문자만 포함된 경우 검증 실패")
         public void failurePasswordValidation_07() {
-            signupRequestDto.setPassword("test123412");
+            signupRequest.setPassword("test123412");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호에 특수문자, 문자만 포함된 경우 검증 실패")
         public void failurePasswordValidation_08() {
-            signupRequestDto.setPassword("!@#$!@#123412");
+            signupRequest.setPassword("!@#$!@#123412");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("비밀번호 검증 실패 - 비밀번호가 null 인 경우 검증 실패")
         public void failurePasswordValidation_09() {
-            signupRequestDto.setPassword(null);
+            signupRequest.setPassword(null);
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
     }
@@ -186,11 +186,11 @@ public class SignupRequestDtoTest {
     @DisplayName("회원 가입 이름 검증")
     public class NameValidation {
 
-        private SignupRequestDto signupRequestDto;
+        private SignupRequest signupRequest;
 
         @BeforeEach
         public void init() {
-            signupRequestDto = SignupRequestDto.builder()
+            signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .nickname("coby")
@@ -201,45 +201,45 @@ public class SignupRequestDtoTest {
         @Test
         @DisplayName("정상적인 이름 형식으로 검증 성공")
         public void successNameValidation() {
-            signupRequestDto.setName("한규빈");
+            signupRequest.setName("한규빈");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(0, validate.size());
         }
 
         @Test
         @DisplayName("이름 검증 실패 - 이름에 영문 포함 시 검증 실패")
         public void failureNameValidation_01() {
-            signupRequestDto.setName("coby");
+            signupRequest.setName("coby");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("이름 검증 실패 - 이름에 특수문자 포함 시 검증 실패")
         public void failureNameValidation_02() {
-            signupRequestDto.setName("한규빈~");
+            signupRequest.setName("한규빈~");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("이름 검증 실패 - 이름에 숫자 포함 시 검증 실패")
         public void failureNameValidation_03() {
-            signupRequestDto.setName("한규빈123");
+            signupRequest.setName("한규빈123");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("이름 검증 실패 - 이름이 null 인 경우 검증 실패")
         public void failureNameValidation_04() {
-            signupRequestDto.setName(null);
+            signupRequest.setName(null);
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
     }
@@ -248,11 +248,11 @@ public class SignupRequestDtoTest {
     @DisplayName("회원 가입 닉네임 검증")
     public class NicknameValidation {
 
-        private SignupRequestDto signupRequestDto;
+        private SignupRequest signupRequest;
 
         @BeforeEach
         public void init() {
-            signupRequestDto = SignupRequestDto.builder()
+            signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .name("한규빈")
@@ -263,27 +263,27 @@ public class SignupRequestDtoTest {
         @Test
         @DisplayName("정상적인 닉네임 형식으로 검증 성공")
         public void successNicknameValidation() {
-            signupRequestDto.setNickname("coby12");
+            signupRequest.setNickname("coby12");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(0, validate.size());
         }
 
         @Test
         @DisplayName("닉네임 검증 실패 - 닉네임에 특수문자 포함된 경우 검증 실패")
         public void failureNicknameValidation_01() {
-            signupRequestDto.setNickname("coby123!@#");
+            signupRequest.setNickname("coby123!@#");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("닉네임 검증 실패 - 닉네임이 null 인 경우 검증 실패")
         public void failureNicknameValidation_02() {
-            signupRequestDto.setNickname(null);
+            signupRequest.setNickname(null);
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
     }
@@ -292,11 +292,11 @@ public class SignupRequestDtoTest {
     @DisplayName("회원 가입 핸드폰 번호 검증")
     public class PhoneNumberValidation {
 
-        private SignupRequestDto signupRequestDto;
+        private SignupRequest signupRequest;
 
         @BeforeEach
         public void init() {
-            signupRequestDto = SignupRequestDto.builder()
+            signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .name("한규빈")
@@ -307,45 +307,45 @@ public class SignupRequestDtoTest {
         @Test
         @DisplayName("정상적인 핸드폰 번호 형식으로 검증 성공")
         public void successPhoneNumberValidation() {
-            signupRequestDto.setPhoneNumber("01011111111");
+            signupRequest.setPhoneNumber("01011111111");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(0, validate.size());
         }
 
         @Test
         @DisplayName("핸드폰 번호 검증 실패 - 핸드폰 번호가 12자리 이상인 경우 검증 실패")
         public void failurePhoneNumberValidation_01() {
-            signupRequestDto.setPhoneNumber("010123456789");
+            signupRequest.setPhoneNumber("010123456789");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("핸드폰 번호 검증 실패 - 핸드폰 번호에 문자가 포함된 경우 검증 실패")
         public void failurePhoneNumberValidation_02() {
-            signupRequestDto.setPhoneNumber("0101234coby");
+            signupRequest.setPhoneNumber("0101234coby");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("핸드폰 번호 검증 실패 - 핸드폰 번호에 특수문자가 포함된 경우 검증 실패")
         public void failurePhoneNumberValidation_03() {
-            signupRequestDto.setPhoneNumber("0101234-1234");
+            signupRequest.setPhoneNumber("0101234-1234");
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
 
         @Test
         @DisplayName("핸드폰 번호 검증 실패 - 핸드폰 번호가 null 인 경우 검증 실패")
         public void failurePhoneNumberValidation_04() {
-            signupRequestDto.setPhoneNumber(null);
+            signupRequest.setPhoneNumber(null);
 
-            Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+            Set<ConstraintViolation<SignupRequest>> validate = validator.validate(signupRequest);
             assertEquals(1, validate.size());
         }
     }
@@ -355,7 +355,7 @@ public class SignupRequestDtoTest {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class SignupRequestDto {
+    public static class SignupRequest {
         @NotBlank(message = "이메일은 필수입니다.")
         @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}", message = "올바르지 않은 형식의 이메일입니다.")
         private String  email;
