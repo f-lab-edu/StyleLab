@@ -2,7 +2,8 @@ package com.stylelab.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stylelab.common.exception.ServiceExceptionHandler;
-import com.stylelab.user.presentation.request.SignupRequestDto;
+import com.stylelab.user.presentation.request.SignInRequest;
+import com.stylelab.user.presentation.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -14,7 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.stylelab.user.exception.UsersError.*;
+import static com.stylelab.user.exception.UsersError.CONFIRM_PASSWORD_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.EMAIL_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.NAME_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.NAME_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.NICKNAME_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.NICKNAME_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.PASSWORD_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_REQUIRED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -70,7 +81,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 이메일인 경우 회원 가입 실패")
         public void failureSignup_01() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail..com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -81,7 +92,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -91,7 +102,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 이메일인 null 인 경우 회원 가입 실패")
         public void failureSignup_02() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
                     .name("한규빈")
@@ -101,7 +112,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(EMAIL_IS_REQUIRED.getCode()))
@@ -111,7 +122,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 비밀번호인 경우 회원 가입 실패")
         public void failureSignup_03() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test123")
                     .confirmPassword("test1234123!@")
@@ -122,7 +133,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -132,7 +143,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 비밀번호가 null 인 경우 회원 가입 실패")
         public void failureSignup_04() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .confirmPassword("test1234123!@")
                     .name("한규빈")
@@ -142,7 +153,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(PASSWORD_IS_REQUIRED.getCode()))
@@ -152,7 +163,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 비밀번호 확인 값이 null 인 경우 회원 가입 실패")
         public void failureSignup_05() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .name("한규빈")
@@ -162,7 +173,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(CONFIRM_PASSWORD_IS_REQUIRED.getCode()))
@@ -172,7 +183,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 이름인 경우 회원 가입 실패")
         public void failureSignup_06() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -183,7 +194,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(NAME_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -193,7 +204,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 이름이 null 인 경우 회원 가입 실패")
         public void failureSignup_07() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -203,7 +214,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(NAME_IS_REQUIRED.getCode()))
@@ -213,7 +224,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 닉네임인 경우 회원 가입 실패")
         public void failureSignup_08() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -224,7 +235,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(NICKNAME_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -234,7 +245,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 닉네임이 null 인 경우 회원 가입 실패")
         public void failureSignup_09() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -244,7 +255,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(NICKNAME_IS_REQUIRED.getCode()))
@@ -254,7 +265,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 핸드폰 번호인 경우 회원 가입 실패")
         public void failureSignup_10() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -265,7 +276,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -275,7 +286,7 @@ public class UsersControllerTest {
         @Test
         @DisplayName("회원 가입 실패 - 핸드폰 번호가 null 인 경우 회원 가입 실패")
         public void failureSignup_11() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
+            SignupRequest signupRequest = SignupRequest.builder()
                     .email("coby@gmail.com")
                     .password("test1234123!@")
                     .confirmPassword("test1234123!@")
@@ -285,7 +296,7 @@ public class UsersControllerTest {
 
             mockMvc.perform(post("/v1/users/signup")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(signupRequestDto)))
+                            .content(objectMapper.writeValueAsString(signupRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(PHONE_NUMBER_IS_REQUIRED.getCode()))
@@ -356,6 +367,78 @@ public class UsersControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(NICKNAME_IS_REQUIRED.getCode()))
                     .andExpect(jsonPath("$.message").value(NICKNAME_IS_REQUIRED.getMessage()));
+        }
+    }
+
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    public class SignInTest {
+
+        @Test
+        @DisplayName("로그인 실패 - 유효하지 않은 이메일인 경우 실패")
+        public void failureSignIn_01() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@@gmail..com")
+                    .password("tester!@31241")
+                    .build();
+
+            mockMvc.perform(post("/v1/users/signin")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 이메일이 null 인 경우 실패")
+        public void failureSignIn_02() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .password("tester!@31241")
+                    .build();
+
+            mockMvc.perform(post("/v1/users/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(EMAIL_IS_REQUIRED.getCode()))
+                    .andExpect(jsonPath("$.message").value(EMAIL_IS_REQUIRED.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 유효하지 않은 비밀번호인 경우 실패")
+        public void failureSignIn_03() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@gmail.com")
+                    .password("tester")
+                    .build();
+
+            mockMvc.perform(post("/v1/users/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 비밀번호가 null 인 경우 실패")
+        public void failureSignIn_04() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@gmail.com")
+                    .build();
+
+            mockMvc.perform(post("/v1/users/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(PASSWORD_IS_REQUIRED.getCode()))
+                    .andExpect(jsonPath("$.message").value(PASSWORD_IS_REQUIRED.getMessage()));
         }
     }
 }

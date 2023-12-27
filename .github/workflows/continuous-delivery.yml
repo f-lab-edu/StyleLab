@@ -4,7 +4,7 @@ on:
     branches: [ releases-** ]
 
 jobs:
-  cd-test: 
+  continuous-delivery:
     runs-on: ubuntu-latest 
     steps: 
     - name: Check out git repository

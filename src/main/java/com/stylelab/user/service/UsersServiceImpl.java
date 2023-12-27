@@ -1,6 +1,5 @@
 package com.stylelab.user.service;
 
-import com.stylelab.common.exception.ServiceError;
 import com.stylelab.common.exception.ServiceException;
 import com.stylelab.user.domain.Users;
 import com.stylelab.user.exception.UsersException;
@@ -11,7 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.stylelab.common.exception.ServiceError.*;
+import static com.stylelab.common.exception.ServiceError.BAD_REQUEST;
 import static com.stylelab.user.exception.UsersError.USERS_SAVE_FAIL;
 
 @Slf4j
