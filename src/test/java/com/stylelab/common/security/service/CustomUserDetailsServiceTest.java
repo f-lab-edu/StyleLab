@@ -12,7 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static com.stylelab.common.exception.ServiceError.UNAUTHORIZED;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class CustomUserDetailsServiceTest {

@@ -4,7 +4,7 @@ on:
     branches: [ develop ]
 
 jobs:
-  ci-test: 
+  pr-continuous-integration:
     runs-on: ubuntu-latest 
     steps: 
     - name: check out git repository

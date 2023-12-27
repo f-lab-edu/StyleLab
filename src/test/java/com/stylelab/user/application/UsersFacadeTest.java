@@ -1,7 +1,6 @@
-package com.stylelab.user.presentation.application;
+package com.stylelab.user.application;
 
 import com.stylelab.common.exception.ServiceException;
-import com.stylelab.user.application.UsersFacade;
 import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.service.UsersService;
 import org.junit.jupiter.api.DisplayName;

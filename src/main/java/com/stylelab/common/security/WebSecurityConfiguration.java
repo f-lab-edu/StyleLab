@@ -1,13 +1,13 @@
 package com.stylelab.common.security;
 
+import com.stylelab.common.security.exception.CustomAccessDeniedHandler;
+import com.stylelab.common.security.exception.CustomAuthenticationEntryPoint;
 import com.stylelab.common.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,11 +22,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
-import java.nio.charset.StandardCharsets;
-
-import static com.stylelab.common.exception.ServiceError.FORBIDDEN;
-import static com.stylelab.common.exception.ServiceError.UNAUTHORIZED;
-
 @Slf4j
 @Configuration
 @EnableWebSecurity
@@ -34,6 +29,8 @@ import static com.stylelab.common.exception.ServiceError.UNAUTHORIZED;
 public class WebSecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     /**
      * 비밀번호를 암호화하기 위한 BCrypt 인코딩을 통하여 비밀번호에 대한 암호화를 수행합니다.
@@ -79,34 +76,16 @@ public class WebSecurityConfiguration {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers(
-                        "/v1/users/signup",
-                        "/v1/users/check-email",
-                        "/v1/users/check-nickname",
-                        "/v1/users/signin"
+                        "/**/users/signup",
+                        "/**/users/check-email",
+                        "/**/users/check-nickname",
+                        "/**/users/signin"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                    response.setStatus(HttpStatus.FORBIDDEN.value());
-                    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.getWriter().write("{"
-                            + "\"code\": \"" + FORBIDDEN.getCode() + "\","
-                            + "\"message\": \""  + FORBIDDEN.getMessage() + "\""
-                            +"}"
-                    );
-                })
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                    response.getWriter().write("{"
-                            + "\"code\": \"" + UNAUTHORIZED.getCode() + "\","
-                            + "\"message\": \""  + UNAUTHORIZED.getMessage() + "\""
-                            +"}"
-                    );
-                })
+                .accessDeniedHandler(customAccessDeniedHandler)
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

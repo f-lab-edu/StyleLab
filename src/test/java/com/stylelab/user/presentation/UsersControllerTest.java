@@ -15,7 +15,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static com.stylelab.user.exception.UsersError.*;
+import static com.stylelab.user.exception.UsersError.CONFIRM_PASSWORD_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.EMAIL_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.NAME_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.NAME_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.NICKNAME_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.NICKNAME_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.PASSWORD_IS_REQUIRED;
+import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_REQUIRED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
