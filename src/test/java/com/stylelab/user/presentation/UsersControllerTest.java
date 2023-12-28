@@ -1,7 +1,10 @@
 package com.stylelab.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stylelab.common.exception.ServiceExceptionHandler;
+import com.stylelab.common.annotation.WithAccount;
+import com.stylelab.common.exception.ServiceError;
+import com.stylelab.user.exception.UsersError;
+import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
 import com.stylelab.user.presentation.request.SignInRequest;
 import com.stylelab.user.presentation.request.SignupRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import static com.stylelab.user.exception.UsersError.CONFIRM_PASSWORD_IS_REQUIRED;
 import static com.stylelab.user.exception.UsersError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT;
@@ -26,6 +32,7 @@ import static com.stylelab.user.exception.UsersError.PASSWORD_IS_NOT_IN_THE_CORR
 import static com.stylelab.user.exception.UsersError.PASSWORD_IS_REQUIRED;
 import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT;
 import static com.stylelab.user.exception.UsersError.PHONE_NUMBER_IS_REQUIRED;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -37,9 +44,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class UsersControllerTest {
 
     @Autowired
-    private UsersController usersController;
-    @Autowired
-    private ServiceExceptionHandler serviceExceptionHandler;
+    private WebApplicationContext webApplicationContext;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -48,8 +53,8 @@ public class UsersControllerTest {
     @BeforeEach
     public void init() {
         mockMvc = MockMvcBuilders
-                .standaloneSetup(usersController)
-                .setControllerAdvice(serviceExceptionHandler)
+                .webAppContextSetup(webApplicationContext)
+                .apply(springSecurity())
                 .build();
     }
 
@@ -314,8 +319,8 @@ public class UsersControllerTest {
             final String email = "test@gmail...com";
 
             mockMvc.perform(get("/v1/users/check-email")
-                    .param("email", email)
-                    .contentType(MediaType.APPLICATION_JSON))
+                            .param("email", email)
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -384,8 +389,8 @@ public class UsersControllerTest {
                     .build();
 
             mockMvc.perform(post("/v1/users/signin")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(signInRequest)))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
                     .andDo(print())
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
@@ -439,6 +444,134 @@ public class UsersControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(PASSWORD_IS_REQUIRED.getCode()))
                     .andExpect(jsonPath("$.message").value(PASSWORD_IS_REQUIRED.getMessage()));
+        }
+    }
+
+    @Nested
+    @DisplayName("배송지 등록 테스트")
+    public class CreateUserDeliveryAddressTest {
+
+        @Test
+        @Rollback
+        @Transactional
+        @DisplayName("배송지 요청 객체의 검증이 통과하면 배송지 등록에 성공한다.")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void successCreateUserDeliveryAddressTest() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .address("경기도 성남시 분당구 정자일로 95 네이버")
+                    .addressDetail("문앞")
+                    .postalCode("13561")
+                    .addressAliases("네이버")
+                    .defaultDeliveryAddress(false)
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isNoContent())
+                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
+                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+        }
+
+        @Test
+        @DisplayName("배송지 등록 실패 - 배송지 주소가 null 인 경우")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void failureCreateUserDeliveryAddress_01() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .addressDetail("문앞")
+                    .postalCode("13561")
+                    .addressAliases("네이버")
+                    .defaultDeliveryAddress(false)
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(UsersError.DELIVERY_ADDRESS_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(UsersError.DELIVERY_ADDRESS_REQUIRE.getMessage()));
+        }
+
+        @Test
+        @DisplayName("배송지 등록 실패 - 배송지 상세 주소가 null 인 경우")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void failureCreateUserDeliveryAddress_02() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .address("경기도 성남시 분당구 정자일로 95 네이버")
+                    .postalCode("13561")
+                    .addressAliases("네이버")
+                    .defaultDeliveryAddress(false)
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(UsersError.DELIVERY_ADDRESS_DETAIL_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(UsersError.DELIVERY_ADDRESS_DETAIL_REQUIRE.getMessage()));
+        }
+
+        @Test
+        @DisplayName("배송지 등록 실패 - 우편 번호가 null 인 경우")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void failureCreateUserDeliveryAddress_03() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .address("경기도 성남시 분당구 정자일로 95 네이버")
+                    .addressDetail("문앞")
+                    .addressAliases("네이버")
+                    .defaultDeliveryAddress(false)
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(UsersError.DELIVERY_POSTAL_CODE_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(UsersError.DELIVERY_POSTAL_CODE_REQUIRE.getMessage()));
+        }
+
+        @Test
+        @DisplayName("배송지 등록 실패 - 배송지 주소 별칭이 null 인 경우")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void failureCreateUserDeliveryAddress_04() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .address("경기도 성남시 분당구 정자일로 95 네이버")
+                    .addressDetail("문앞")
+                    .postalCode("13561")
+                    .defaultDeliveryAddress(false)
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(UsersError.DELIVERY_ADDRESS_ALIASES_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(UsersError.DELIVERY_ADDRESS_ALIASES_REQUIRE.getMessage()));
+        }
+
+        @Test
+        @DisplayName("배송지 등록 실패 - 배송지 기본 주소지 여부가 null 인 경우")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        public void failureCreateUserDeliveryAddress_05() throws Exception {
+            CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
+                    .address("경기도 성남시 분당구 정자일로 95 네이버")
+                    .addressDetail("문앞")
+                    .postalCode("13561")
+                    .addressAliases("네이버")
+                    .build();
+
+            mockMvc.perform(post("/v1/users/deliveries")
+                            .content(objectMapper.writeValueAsString(createUserDeliveryAddressRequest))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(UsersError.DELIVERY_DEFAULT_ADDRESS_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(UsersError.DELIVERY_DEFAULT_ADDRESS_REQUIRE.getMessage()));
         }
     }
 }

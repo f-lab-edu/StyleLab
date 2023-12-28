@@ -27,22 +27,34 @@ public class Users extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long userId;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String nickname;
+
     @Column(nullable = false)
     private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UsersRole role;
+
     @Column(nullable = false)
     private boolean withdrawal;
+
     private LocalDateTime withdrawalAt;
+
+    private Users(Long userId) {
+        this.userId = userId;
+    }
 
     @Builder
     public Users(
@@ -56,5 +68,9 @@ public class Users extends BaseEntity {
         this.role = role;
         this.withdrawal = withdrawal;
         this.withdrawalAt = withdrawalAt;
+    }
+
+    public static Users createUser(Long userId) {
+        return new Users(userId);
     }
 }

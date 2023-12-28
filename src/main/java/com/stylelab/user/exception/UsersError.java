@@ -25,8 +25,15 @@ public enum UsersError implements CommonError {
     PASSWORD_VERIFICATION_NOT_MATCH(HttpStatus.BAD_REQUEST, "61012", "비밀번호와 비밀번호 확인값이 일치하지 않습니다."),
     PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT(HttpStatus.BAD_REQUEST, "61013", "올바르지 않은 형식의 비밀번호입니다." ),
     NICKNAME_IS_NOT_IN_THE_CORRECT_FORMAT(HttpStatus.BAD_REQUEST, "61014", "올바르지 않은 형식의 닉네임입니다." ),
+    DELIVERY_ADDRESS_REQUIRE(HttpStatus.BAD_REQUEST, "61015", "배송지 주소는 필수입니다." ),
+    DELIVERY_ADDRESS_DETAIL_REQUIRE(HttpStatus.BAD_REQUEST, "61016", "배송지 상세 주소는 필수입니다." ),
+    DELIVERY_POSTAL_CODE_REQUIRE(HttpStatus.BAD_REQUEST, "61017", "배송지 우편 주소는 필수입니다." ),
+    DELIVERY_ADDRESS_ALIASES_REQUIRE(HttpStatus.BAD_REQUEST, "61018", "배송지 별칭은 필수입니다." ),
+    DELIVERY_DEFAULT_ADDRESS_REQUIRE(HttpStatus.BAD_REQUEST, "61019", "기본 배송지 값은 필수입니다." ),
 
-    USERS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "61050", "회원 등록에 실패하였습니다. 관리자에가 문의해 주십시오.");
+    USERS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "61050", "회원 등록에 실패하였습니다. 관리자에가 문의해 주십시오."),
+    DELIVERY_ADDRESS_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "61051", "회원 배송지 등록에 실패하였습니다. 관리자에가 문의해 주십시오.");
+
     private final HttpStatus httpStatus;
     private final String code;
     private final String message;

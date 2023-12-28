@@ -3,6 +3,7 @@ package com.stylelab.common.security;
 import com.stylelab.common.security.exception.CustomAccessDeniedHandler;
 import com.stylelab.common.security.exception.CustomAuthenticationEntryPoint;
 import com.stylelab.common.security.filter.JwtAuthenticationFilter;
+import com.stylelab.user.constant.UsersRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
@@ -81,6 +82,9 @@ public class WebSecurityConfiguration {
                         "/**/users/check-nickname",
                         "/**/users/signin"
                 ).permitAll()
+                .antMatchers(
+                        "/**/users/deliveries"
+                ).hasRole(UsersRole.ROLE_USER.getRole())
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling()

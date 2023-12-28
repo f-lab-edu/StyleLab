@@ -17,6 +17,7 @@ import java.util.Collections;
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
 
+    private Users users;
     private final String email;
     private final String password;
     private final UsersRole usersRole;
@@ -59,6 +60,7 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal create(Users users) {
         return new UserPrincipal(
+                Users.createUser(users.getUserId()),
                 users.getEmail(),
                 users.getPassword(),
                 users.getRole(),
