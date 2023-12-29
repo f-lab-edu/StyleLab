@@ -2,12 +2,15 @@ package com.stylelab.user.application;
 
 import com.stylelab.common.security.UserPrincipal;
 import com.stylelab.common.security.jwt.JwtTokenProvider;
+import com.stylelab.user.domain.UserDeliveryAddress;
 import com.stylelab.user.exception.UsersException;
+import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
 import com.stylelab.user.presentation.request.SignInRequest;
 import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.presentation.response.ExistsByEmailResponse;
 import com.stylelab.user.presentation.response.ExistsByNicknameResponse;
 import com.stylelab.user.presentation.response.SignInResponse;
+import com.stylelab.user.service.UserDeliveryAddressService;
 import com.stylelab.user.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +30,7 @@ import static com.stylelab.user.exception.UsersError.PASSWORD_VERIFICATION_NOT_M
 public class UsersFacade {
 
     private final UsersService usersService;
+    private final UserDeliveryAddressService userDeliveryAddressService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
@@ -57,5 +61,11 @@ public class UsersFacade {
 
         UserPrincipal principal = (UserPrincipal) authenticationResponse.getPrincipal();
         return new SignInResponse(jwtTokenProvider.createAuthToken(principal.getEmail(), principal.getUsersRole().name()));
+    }
+
+    public void createUserDeliveryAddress(UserPrincipal userPrincipal, CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
+        UserDeliveryAddress userDeliveryAddress =
+                CreateUserDeliveryAddressRequest.toEntity(userPrincipal.getUsers(), createUserDeliveryAddressRequest);
+        userDeliveryAddressService.createUserDeliveryAddress(userDeliveryAddress);
     }
 }

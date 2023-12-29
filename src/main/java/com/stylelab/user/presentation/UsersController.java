@@ -1,8 +1,10 @@
 package com.stylelab.user.presentation;
 
 import com.stylelab.common.dto.ApiResponse;
+import com.stylelab.common.security.UserPrincipal;
 import com.stylelab.user.application.UsersFacade;
 import com.stylelab.user.exception.UsersError;
+import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
 import com.stylelab.user.presentation.request.SignInRequest;
 import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.presentation.response.ExistsByEmailResponse;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,5 +63,13 @@ public class UsersController {
     @PostMapping("/signin")
     public ResponseEntity<ApiResponse<SignInResponse>> sigIn(@RequestBody @Valid final SignInRequest signInRequest) {
         return ResponseEntity.ok(ApiResponse.createApiResponse(usersFacade.signIn(signInRequest)));
+    }
+
+    @PostMapping("/deliveries")
+    public ResponseEntity<ApiResponse<Void>> createUserDeliveryAddress(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestBody@Valid final CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
+        usersFacade.createUserDeliveryAddress(userPrincipal, createUserDeliveryAddressRequest);
+        return new ResponseEntity<>(ApiResponse.createEmptyApiResponse(), HttpStatus.NO_CONTENT);
     }
 }
