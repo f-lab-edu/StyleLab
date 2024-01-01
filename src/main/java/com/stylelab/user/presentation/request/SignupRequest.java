@@ -51,4 +51,16 @@ public class SignupRequest {
                 .role(UsersRole.ROLE_USER)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "SignupRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", confirmPassword='" + confirmPassword + '\'' +
+                ", name='" + name + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                '}';
+    }
 }

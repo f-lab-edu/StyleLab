@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class ExistsByEmailResponse {
 
     private boolean duplicate;
+
+    public static ExistsByEmailResponse createResponse(boolean duplicate) {
+        return new ExistsByEmailResponse(duplicate);
+    }
 }

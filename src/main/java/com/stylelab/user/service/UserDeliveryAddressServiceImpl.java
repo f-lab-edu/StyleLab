@@ -26,12 +26,10 @@ public class UserDeliveryAddressServiceImpl implements UserDeliveryAddressServic
     public void createUserDeliveryAddress(UserDeliveryAddress userDeliveryAddress) {
         try {
             userDeliveryAddressRepository.save(userDeliveryAddress);
-        } catch (DataAccessException dataException) {
-            log.error("data access exception", dataException);
-            throw new UsersException(DELIVERY_ADDRESS_SAVE_FAIL, DELIVERY_ADDRESS_SAVE_FAIL.getMessage(), dataException);
-        } catch (RuntimeException runtimeException) {
-            log.error("runtime exception", runtimeException);
-            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), runtimeException);
+        } catch (DataAccessException exception) {
+            throw new UsersException(DELIVERY_ADDRESS_SAVE_FAIL, DELIVERY_ADDRESS_SAVE_FAIL.getMessage(), exception);
+        } catch (RuntimeException exception) {
+            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), exception);
         }
     }
 }
