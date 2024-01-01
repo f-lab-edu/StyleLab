@@ -10,4 +10,8 @@ import lombok.NoArgsConstructor;
 public class ExistsByNicknameResponse {
 
     private boolean duplicate;
+
+    public static ExistsByNicknameResponse createResponse(boolean duplicate) {
+        return new ExistsByNicknameResponse(duplicate);
+    }
 }

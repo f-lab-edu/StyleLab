@@ -22,4 +22,12 @@ public class SignInRequest {
     @NotBlank(message = "PASSWORD_IS_REQUIRED", payload = UsersError.class)
     @Pattern(regexp = "^.*(?=^.{8,15}$)(?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$", message = "PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT", payload = UsersError.class)
     private String password;
+
+    @Override
+    public String toString() {
+        return "SignInRequest{" +
+                "email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
