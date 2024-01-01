@@ -40,4 +40,15 @@ public class CreateUserDeliveryAddressRequest {
                 .defaultDeliveryAddress(createUserDeliveryAddressRequest.getDefaultDeliveryAddress())
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "CreateUserDeliveryAddressRequest{" +
+                "address='" + address + '\'' +
+                ", addressDetail='" + addressDetail + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                ", addressAliases='" + addressAliases + '\'' +
+                ", defaultDeliveryAddress=" + defaultDeliveryAddress +
+                '}';
+    }
 }

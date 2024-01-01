@@ -26,12 +26,10 @@ public class UsersServiceImpl implements UsersService {
     public void signup(final Users users) {
         try {
             usersRepository.save(users);
-        } catch (DataAccessException dataException) {
-            log.error("data access exception", dataException);
-            throw new UsersException(USERS_SAVE_FAIL, USERS_SAVE_FAIL.getMessage(), dataException);
-        } catch (RuntimeException runtimeException) {
-            log.error("runtime exception", runtimeException);
-            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), runtimeException);
+        } catch (DataAccessException exception) {
+            throw new UsersException(USERS_SAVE_FAIL, USERS_SAVE_FAIL.getMessage(), exception);
+        } catch (RuntimeException exception) {
+            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), exception);
         }
     }
 

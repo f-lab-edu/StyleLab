@@ -46,11 +46,11 @@ public class UsersFacade {
     }
 
     public ExistsByEmailResponse existsByEmail(final String email) {
-        return new ExistsByEmailResponse(usersService.existsByEmail(email));
+        return ExistsByEmailResponse.createResponse(usersService.existsByEmail(email));
     }
 
     public ExistsByNicknameResponse existsByNickname(final String nickname) {
-        return new ExistsByNicknameResponse(usersService.existsByNickname(nickname));
+        return ExistsByNicknameResponse.createResponse(usersService.existsByNickname(nickname));
     }
 
     public SignInResponse signIn(final SignInRequest signInRequest) {
@@ -60,7 +60,7 @@ public class UsersFacade {
                 this.authenticationManager.authenticate(authenticationRequest);
 
         UserPrincipal principal = (UserPrincipal) authenticationResponse.getPrincipal();
-        return new SignInResponse(jwtTokenProvider.createAuthToken(principal.getEmail(), principal.getUsersRole().name()));
+        return SignInResponse.createResponse(jwtTokenProvider.createAuthToken(principal.getEmail(), principal.getUsersRole().name()));
     }
 
     public void createUserDeliveryAddress(UserPrincipal userPrincipal, CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
