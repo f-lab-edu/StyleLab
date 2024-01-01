@@ -5,9 +5,6 @@ on:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
-env:
-  CACHED_DEPENDENCIES_PATHS: '**/node_modules'
-
 jobs:
   CodeReview:
     runs-on: ubuntu-latest
