@@ -36,12 +36,12 @@ public class UsersFacade {
     private final JwtTokenProvider jwtTokenProvider;
 
     public void signup(final SignupRequest signupRequest) {
-        if (!Objects.equals(signupRequest.getPassword(), signupRequest.getConfirmPassword())) {
+        if (!Objects.equals(signupRequest.password(), signupRequest.confirmPassword())) {
             log.error(PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
             throw new UsersException(PASSWORD_VERIFICATION_NOT_MATCH, PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
         }
 
-        String encodePassword = passwordEncoder.encode(signupRequest.getPassword());
+        String encodePassword = passwordEncoder.encode(signupRequest.password());
         usersService.signup(SignupRequest.toEntity(signupRequest, encodePassword));
     }
 
@@ -55,7 +55,7 @@ public class UsersFacade {
 
     public SignInResponse signIn(final SignInRequest signInRequest) {
         Authentication authenticationRequest =
-                UsernamePasswordAuthenticationToken.unauthenticated(signInRequest.getEmail(), signInRequest.getPassword());
+                UsernamePasswordAuthenticationToken.unauthenticated(signInRequest.email(), signInRequest.password());
         Authentication authenticationResponse =
                 this.authenticationManager.authenticate(authenticationRequest);
 

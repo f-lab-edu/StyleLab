@@ -21,11 +21,11 @@ public class ProductCategoriesFacade {
 
     private final ProductCategoriesService productCategoriesService;
 
-    public ProductCategoriesResponse findAll() {
-        List<ProductCategoriesDto> productCategoriesDtos = productCategoriesService.findAll();
+    public ProductCategoriesResponse findAllCategories() {
+        List<ProductCategoriesDto> productCategoriesDtos = productCategoriesService.findAllCategories();
 
         List<Categories> parentCategories = productCategoriesDtos.stream()
-                .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.getParentCategory()))
+                .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.parentCategory()))
                 .map(Categories::of)
                 .collect(Collectors.toList());
 
@@ -38,7 +38,7 @@ public class ProductCategoriesFacade {
             List<ProductCategoriesDto> productCategoriesDtos, List<Categories> categories) {
         for (Categories category : categories) {
             List<Categories> childCategories = productCategoriesDtos.stream()
-                    .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.getParentCategory(), category.getCategoryPath()))
+                    .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.parentCategory(), category.categoryPath()))
                     .map(Categories::of)
                     .collect(Collectors.toList());
 

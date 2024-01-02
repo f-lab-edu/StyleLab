@@ -10,6 +10,9 @@ import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.presentation.response.ExistsByEmailResponse;
 import com.stylelab.user.presentation.response.ExistsByNicknameResponse;
 import com.stylelab.user.presentation.response.SignInResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Slf4j
 @Validated
