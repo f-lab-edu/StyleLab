@@ -82,6 +82,7 @@ public class WebSecurityConfiguration {
                         "/**/users/check-nickname",
                         "/**/users/signin"
                 ).permitAll()
+                .antMatchers("/**/categories").permitAll()
                 .antMatchers(
                         "/**/users/deliveries"
                 ).hasRole(UsersRole.ROLE_USER.getRole())
