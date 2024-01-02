@@ -1,0 +1,61 @@
+name: cd
+on:
+  push:
+    branches: [ releases-** ]
+
+jobs:
+  continuous-delivery:
+    runs-on: ubuntu-latest 
+    steps: 
+    - name: Check out git repository
+      uses: actions/checkout@v4  
+      
+    - name: Set up JDK 11 
+      uses: actions/setup-java@v4
+      with:
+        java-version: 11 
+        distribution: 'temurin'
+
+    - name: Setup MySQL
+      uses: samin/mysql-action@v1.1
+      with:
+        mysql database: ${{ secrets.MYSQL_DATABASE }}
+        mysql user: ${{ secrets.MYSQL_USER }}
+        mysql password: ${{ secrets.MYSQL_PASSWORD }}
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Make application-dev.yml
+      run: |
+        cd src/main/resources
+        touch ./application-dev.yml
+        echo "${{ secrets.APPLICATION_DEV_YAML }}" | base64 --decode > ./application-dev.yml
+        touch ./application-local.yml
+        echo "${{ secrets.APPLICATION_LOCAL_YAML }}" | base64 --decode > ./application-local.yml
+
+    - name: Test with Gradle
+      run: ./gradlew test
+      
+    - name: Make jar
+      run: ./gradlew bootJar
+
+    - name: Copy jar file to remote
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        username: ${{ secrets.DEPLOY_DEV_USER }}
+        host: ${{ secrets.DEPLOY_DEV_IP }}
+        key: ${{ secrets.DEPLOY_DEV_SSH_PRIVATE_KEY }}
+        source: "./build/libs/*.jar"
+        target: "/stylelab_app/upload"
+        strip_components: 2
+
+    - name: Executing remote ssh 
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        username: ${{ secrets.DEPLOY_DEV_USER }}
+        host: ${{ secrets.DEPLOY_DEV_IP }}
+        key: ${{ secrets.DEPLOY_DEV_SSH_PRIVATE_KEY }}
+        script: |
+          cd /stylelab_app
+          ./deploy.sh

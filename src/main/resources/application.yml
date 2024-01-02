@@ -1,0 +1,23 @@
+server:
+  port: 770
+  servlet:
+    context-path: /api
+
+spring:
+  profiles:
+    default: local
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        type: debug
+        default_batch_fetch_size: 100
