@@ -100,15 +100,15 @@ public class ProductCategoriesResponseTest {
         generateCategoryTreeRecursively(productCategoriesDtos, parentCategories);
 
         assertEquals(2, parentCategories.size());
-        assertEquals(4, parentCategories.getFirst().childCategories().size());
-        assertEquals(2, parentCategories.getFirst().childCategories().getFirst().childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(0).childCategories().get(0).childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(0).childCategories().get(1).childCategories().size());
-        assertEquals(2, parentCategories.getFirst().childCategories().get(1).childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(1).childCategories().get(0).childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(1).childCategories().get(1).childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(2).childCategories().size());
-        assertEquals(0, parentCategories.getFirst().childCategories().get(3).childCategories().size());
+        assertEquals(4, parentCategories.get(0).childCategories().size());
+        assertEquals(2, parentCategories.get(0).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(0).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(0).childCategories().get(1).childCategories().size());
+        assertEquals(2, parentCategories.get(0).childCategories().get(1).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(1).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(1).childCategories().get(1).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(2).childCategories().size());
+        assertEquals(0, parentCategories.get(0).childCategories().get(3).childCategories().size());
         assertEquals(3, parentCategories.get(1).childCategories().size());
         assertEquals(0, parentCategories.get(1).childCategories().get(0).childCategories().size());
         assertEquals(0, parentCategories.get(1).childCategories().get(1).childCategories().size());
