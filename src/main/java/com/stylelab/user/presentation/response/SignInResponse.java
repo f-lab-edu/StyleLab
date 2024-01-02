@@ -2,17 +2,9 @@ package com.stylelab.user.presentation.response;
 
 import com.stylelab.user.exception.UsersError;
 import com.stylelab.user.exception.UsersException;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class SignInResponse {
-
-    private String token;
+public record SignInResponse(String token) {
 
     public static SignInResponse createResponse(String token) {
         if (!StringUtils.hasText(token)) {

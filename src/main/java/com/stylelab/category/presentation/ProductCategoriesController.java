@@ -20,6 +20,6 @@ public class ProductCategoriesController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<ProductCategoriesResponse>> findAll() {
-        return ResponseEntity.ok(ApiResponse.createApiResponse(productCategoriesFacade.findAll()));
+        return ResponseEntity.ok(ApiResponse.createApiResponse(productCategoriesFacade.findAllCategories()));
     }
 }

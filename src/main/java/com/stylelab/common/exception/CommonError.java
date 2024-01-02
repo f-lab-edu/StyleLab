@@ -1,8 +1,7 @@
 package com.stylelab.common.exception;
 
+import jakarta.validation.Payload;
 import org.springframework.http.HttpStatus;
-
-import javax.validation.Payload;
 
 public interface CommonError extends Payload {
 

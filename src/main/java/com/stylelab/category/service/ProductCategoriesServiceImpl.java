@@ -19,7 +19,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     private final ProductCategoriesRepository productCategoriesRepository;
 
     @Override
-    public List<ProductCategoriesDto> findAll() {
+    public List<ProductCategoriesDto> findAllCategories() {
         return productCategoriesRepository.findAll().stream()
                 .map(ProductCategoriesDto::toDto)
                 .collect(Collectors.toList());

@@ -93,33 +93,33 @@ public class ProductCategoriesResponseTest {
     public void generateCategoryTreeRecursively() {
 
         List<ProductCategoriesResponse.Categories> parentCategories = productCategoriesDtos.stream()
-                .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.getParentCategory()))
+                .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.parentCategory()))
                 .map(ProductCategoriesResponse.Categories::of)
                 .collect(Collectors.toList());
 
         generateCategoryTreeRecursively(productCategoriesDtos, parentCategories);
 
         assertEquals(2, parentCategories.size());
-        assertEquals(4, parentCategories.get(0).getChildCategories().size());
-        assertEquals(2, parentCategories.get(0).getChildCategories().get(0).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(0).getChildCategories().get(0).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(0).getChildCategories().get(1).getChildCategories().size());
-        assertEquals(2, parentCategories.get(0).getChildCategories().get(1).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(1).getChildCategories().get(0).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(1).getChildCategories().get(1).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(2).getChildCategories().size());
-        assertEquals(0, parentCategories.get(0).getChildCategories().get(3).getChildCategories().size());
-        assertEquals(3, parentCategories.get(1).getChildCategories().size());
-        assertEquals(0, parentCategories.get(1).getChildCategories().get(0).getChildCategories().size());
-        assertEquals(0, parentCategories.get(1).getChildCategories().get(1).getChildCategories().size());
-        assertEquals(0, parentCategories.get(1).getChildCategories().get(2).getChildCategories().size());
+        assertEquals(4, parentCategories.getFirst().childCategories().size());
+        assertEquals(2, parentCategories.getFirst().childCategories().getFirst().childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(0).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(0).childCategories().get(1).childCategories().size());
+        assertEquals(2, parentCategories.getFirst().childCategories().get(1).childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(1).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(1).childCategories().get(1).childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(2).childCategories().size());
+        assertEquals(0, parentCategories.getFirst().childCategories().get(3).childCategories().size());
+        assertEquals(3, parentCategories.get(1).childCategories().size());
+        assertEquals(0, parentCategories.get(1).childCategories().get(0).childCategories().size());
+        assertEquals(0, parentCategories.get(1).childCategories().get(1).childCategories().size());
+        assertEquals(0, parentCategories.get(1).childCategories().get(2).childCategories().size());
     }
 
     private void generateCategoryTreeRecursively(
             List<ProductCategoriesDto> productCategoriesDtos, List<ProductCategoriesResponse.Categories> categories) {
         for (ProductCategoriesResponse.Categories category : categories) {
             List<ProductCategoriesResponse.Categories> childCategories = productCategoriesDtos.stream()
-                    .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.getParentCategory(), category.getCategoryPath()))
+                    .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.parentCategory(), category.categoryPath()))
                     .map(ProductCategoriesResponse.Categories::of)
                     .collect(Collectors.toList());
             category.addAllChildCategories(childCategories);

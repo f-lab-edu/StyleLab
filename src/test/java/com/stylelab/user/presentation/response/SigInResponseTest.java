@@ -21,7 +21,7 @@ public class SigInResponseTest {
 
         // then
         assertNotNull(response);
-        assertEquals(token, response.getToken());
+        assertEquals(token, response.token());
     }
 
     @Test
