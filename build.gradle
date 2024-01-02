@@ -7,7 +7,7 @@ plugins {
 group = 'com.stylelab'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = '17'
 }
 
 repositories {
