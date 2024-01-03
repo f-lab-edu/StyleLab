@@ -3,7 +3,7 @@ name: code analyze
 on:
   pull_request:
     branches: [ develop ]
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize]
   workflow_dispatch:
 
 jobs:
