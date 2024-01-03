@@ -1,10 +1,7 @@
 package com.stylelab.file.dto;
 
-import lombok.Builder;
-
 import java.util.List;
 
-@Builder
 public record UploadResult(
         List<SuccessImageUrl> imageUrls,
         List<FailureFilename> failureFilenames
@@ -23,9 +20,6 @@ public record UploadResult(
     }
 
     public static UploadResult createUploadResult(List<SuccessImageUrl> successImageUrls, List<FailureFilename> failureFilenames) {
-        return UploadResult.builder()
-                .imageUrls(successImageUrls)
-                .failureFilenames(failureFilenames)
-                .build();
+        return new UploadResult(successImageUrls, failureFilenames);
     }
 }

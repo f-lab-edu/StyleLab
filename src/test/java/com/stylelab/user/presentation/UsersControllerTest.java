@@ -62,27 +62,6 @@ public class UsersControllerTest {
     @DisplayName("회원 가입 테스트")
     public class SignupTest {
 
-        /*@Test
-        @DisplayName("회원 가입 성공")
-        public void successSignup() throws Exception {
-            SignupRequestDto signupRequestDto = SignupRequestDto.builder()
-                    .email("coby@gmail.com")
-                    .password("test1234123!@")
-                    .confirmPassword("test1234123!@")
-                    .name("한규빈")
-                    .nickname("coby")
-                    .phoneNumber("01011111111")
-                    .build();
-
-            mockMvc.perform(post("/v1/users/signup")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(signupRequestDto)))
-                    .andDo(print())
-                    .andExpect(status().isNoContent())
-                    .andExpect(jsonPath("$.code").value(OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(OK.getMessage()));
-        }*/
-
         @Test
         @DisplayName("회원 가입 실패 - 유효하지 않은 이메일인 경우 회원 가입 실패")
         public void failureSignup_01() throws Exception {

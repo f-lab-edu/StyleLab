@@ -17,74 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 public class ProductCategoriesResponseTest {
 
-    private List<ProductCategoriesDto> productCategoriesDtos;
+    private List<ProductCategoriesDto> productCategoryDtos;
 
     @BeforeEach
     public void init() {
-        productCategoriesDtos = Arrays.asList(
-                ProductCategoriesDto.builder()
-                        .categoryName("상의")
-                        .categoryPath("001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("맨투맨/후드")
-                        .categoryPath("001001001")
-                        .parentCategory("001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("맨투맨")
-                        .categoryPath("001001001001")
-                        .parentCategory("001001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("후드")
-                        .categoryPath("001001001002")
-                        .parentCategory("001001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("니트/스웨터")
-                        .categoryPath("001001002")
-                        .parentCategory("001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("니트")
-                        .categoryPath("001001002001")
-                        .parentCategory("001001002")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("스웨터")
-                        .categoryPath("001001002002")
-                        .parentCategory("001001002")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("반소매 티셔츠")
-                        .categoryPath("001001003")
-                        .parentCategory("001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("셔츠")
-                        .categoryPath("001001004")
-                        .parentCategory("001001")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("바지")
-                        .categoryPath("001002")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("데님 팬츠")
-                        .categoryPath("001002001")
-                        .parentCategory("001002")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("코튼 팬츠")
-                        .categoryPath("001002002")
-                        .parentCategory("001002")
-                        .build(),
-                ProductCategoriesDto.builder()
-                        .categoryName("슬랙스")
-                        .categoryPath("001002003")
-                        .parentCategory("001002")
-                        .build()
+        productCategoryDtos = Arrays.asList(
+                new ProductCategoriesDto("상의", "001001"),
+                new ProductCategoriesDto("맨투맨/후드", "001001001", "001001"),
+                new ProductCategoriesDto("맨투맨", "001001001001", "001001001"),
+                new ProductCategoriesDto("후드", "001001001002", "001001001"),
+                new ProductCategoriesDto("니트/스웨터", "001001002", "001001"),
+                new ProductCategoriesDto("니트", "001001002001", "001001002"),
+                new ProductCategoriesDto("스웨터", "001001002002", "001001002"),
+                new ProductCategoriesDto("반소매 티셔츠", "001001003", "001001"),
+                new ProductCategoriesDto("셔츠", "001001004", "001001"),
+                new ProductCategoriesDto("바지", "001002"),
+                new ProductCategoriesDto("데님 팬츠", "001002001", "001002"),
+                new ProductCategoriesDto("코튼 팬츠", "001002002", "001002"),
+                new ProductCategoriesDto("슬랙스", "001002003", "001002")
         );
     }
 
@@ -92,12 +42,12 @@ public class ProductCategoriesResponseTest {
     @DisplayName("카테고리 트리를 재귀적으로 생성합니다.")
     public void generateCategoryTreeRecursively() {
 
-        List<ProductCategoriesResponse.Categories> parentCategories = productCategoriesDtos.stream()
+        List<ProductCategoriesResponse.Categories> parentCategories = productCategoryDtos.stream()
                 .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.parentCategory()))
                 .map(ProductCategoriesResponse.Categories::of)
                 .collect(Collectors.toList());
 
-        generateCategoryTreeRecursively(productCategoriesDtos, parentCategories);
+        generateCategoryTreeRecursively(productCategoryDtos, parentCategories);
 
         assertEquals(2, parentCategories.size());
         assertEquals(4, parentCategories.get(0).childCategories().size());
@@ -116,14 +66,14 @@ public class ProductCategoriesResponseTest {
     }
 
     private void generateCategoryTreeRecursively(
-            List<ProductCategoriesDto> productCategoriesDtos, List<ProductCategoriesResponse.Categories> categories) {
+            List<ProductCategoriesDto> productCategoryDtos, List<ProductCategoriesResponse.Categories> categories) {
         for (ProductCategoriesResponse.Categories category : categories) {
-            List<ProductCategoriesResponse.Categories> childCategories = productCategoriesDtos.stream()
+            List<ProductCategoriesResponse.Categories> childCategories = productCategoryDtos.stream()
                     .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.parentCategory(), category.categoryPath()))
                     .map(ProductCategoriesResponse.Categories::of)
                     .collect(Collectors.toList());
             category.addAllChildCategories(childCategories);
-            generateCategoryTreeRecursively(productCategoriesDtos, childCategories);
+            generateCategoryTreeRecursively(productCategoryDtos, childCategories);
         }
     }
 }

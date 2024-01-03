@@ -2,15 +2,12 @@ package com.stylelab.category.presentation.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.stylelab.category.dto.ProductCategoriesDto;
-import lombok.Builder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 public record ProductCategoriesResponse(List<Categories> categories) {
 
-    @Builder
     public record Categories(
             String categoryName,
             String categoryPath,
@@ -20,12 +17,12 @@ public record ProductCategoriesResponse(List<Categories> categories) {
     ) {
 
         public static Categories of(ProductCategoriesDto productCategoriesDto) {
-            return Categories.builder()
-                    .categoryName(productCategoriesDto.categoryName())
-                    .categoryPath(productCategoriesDto.categoryPath())
-                    .parentCategory(productCategoriesDto.parentCategory())
-                    .childCategories(new ArrayList<>())
-                    .build();
+            return new Categories(
+                    productCategoriesDto.categoryName(),
+                    productCategoriesDto.categoryPath(),
+                    productCategoriesDto.parentCategory(),
+                    new ArrayList<>()
+            );
         }
 
         public void addAllChildCategories(List<Categories> childCategories) {
@@ -34,8 +31,6 @@ public record ProductCategoriesResponse(List<Categories> categories) {
     }
 
     public static ProductCategoriesResponse createResponse(List<Categories> categories) {
-        return ProductCategoriesResponse.builder()
-                .categories(categories)
-                .build();
+        return new ProductCategoriesResponse(categories);
     }
 }
