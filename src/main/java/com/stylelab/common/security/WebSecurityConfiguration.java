@@ -85,6 +85,10 @@ public class WebSecurityConfiguration {
                                 ).permitAll()
                                 .requestMatchers("/**/categories").permitAll()
                                 .requestMatchers( "/**/users/deliveries").hasRole(UsersRole.ROLE_USER.getRole())
+                                .requestMatchers( "/**/files").hasAnyRole(
+                                        UsersRole.ROLE_STORE_OWNER.getRole(),
+                                        UsersRole.ROLE_STORE_STAFF.getRole()
+                                )
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->
