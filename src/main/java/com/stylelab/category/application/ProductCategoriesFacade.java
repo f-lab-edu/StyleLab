@@ -22,29 +22,29 @@ public class ProductCategoriesFacade {
     private final ProductCategoriesService productCategoriesService;
 
     public ProductCategoriesResponse findAllCategories() {
-        List<ProductCategoriesDto> productCategoriesDtos = productCategoriesService.findAllCategories();
+        List<ProductCategoriesDto> productCategoryDtos = productCategoriesService.findAllCategories();
 
-        List<Categories> parentCategories = productCategoriesDtos.stream()
+        List<Categories> parentCategories = productCategoryDtos.stream()
                 .filter(productCategoriesDto -> !StringUtils.hasText(productCategoriesDto.parentCategory()))
                 .map(Categories::of)
                 .collect(Collectors.toList());
 
-        generateCategoryTreeRecursively(productCategoriesDtos, parentCategories);
+        generateCategoryTreeRecursively(productCategoryDtos, parentCategories);
 
         return ProductCategoriesResponse.createResponse(parentCategories);
     }
 
     private void generateCategoryTreeRecursively(
-            List<ProductCategoriesDto> productCategoriesDtos, List<Categories> categories) {
+            List<ProductCategoriesDto> productCategoryDtos, List<Categories> categories) {
         for (Categories category : categories) {
-            List<Categories> childCategories = productCategoriesDtos.stream()
+            List<Categories> childCategories = productCategoryDtos.stream()
                     .filter(productCategoriesDto -> Objects.equals(productCategoriesDto.parentCategory(), category.categoryPath()))
                     .map(Categories::of)
                     .collect(Collectors.toList());
 
             category.addAllChildCategories(childCategories);
 
-            generateCategoryTreeRecursively(productCategoriesDtos, childCategories);
+            generateCategoryTreeRecursively(productCategoryDtos, childCategories);
         }
     }
 }
