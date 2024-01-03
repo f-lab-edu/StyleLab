@@ -44,3 +44,9 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+sonarqube {
+    properties {
+        property "sonar.java.binaries", "**"
+    }
+}
