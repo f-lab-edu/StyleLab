@@ -3,7 +3,6 @@ package com.stylelab.store.presentation;
 import com.stylelab.common.dto.ApiResponse;
 import com.stylelab.store.application.StoreFacade;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

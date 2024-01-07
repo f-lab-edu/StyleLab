@@ -10,7 +10,6 @@ import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.presentation.response.ExistsByEmailResponse;
 import com.stylelab.user.presentation.response.ExistsByNicknameResponse;
 import com.stylelab.user.presentation.response.SignInResponse;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
