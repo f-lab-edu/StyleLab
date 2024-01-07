@@ -40,6 +40,6 @@ public class ThrowingAspect {
         log.error("request url: {}/{}", host, requestURI);
         log.error("[where the exception occurred]: {}.{}", exception.getStackTrace()[0].getClassName(), exception.getStackTrace()[0].getMethodName());
         Object[] args = joinPoint.getArgs();
-        log.error("[parameter]: {}", (args.length > 0 && args[0] != null) ? String.valueOf(args[0]) : NO_PARAMETERS, exception);
+        log.error("[parameter]: {}", (args.length > 0 && args[0] != null) ? String.valueOf(args[0]) : NO_PARAMETERS);
     }
 }
