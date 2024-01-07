@@ -4,6 +4,7 @@ import com.stylelab.store.constant.ApproveType;
 import com.stylelab.store.constant.StoreStaffRole;
 import com.stylelab.store.domain.Store;
 import com.stylelab.store.domain.StoreStaff;
+import com.stylelab.store.exception.StoreError;
 import com.stylelab.store.exception.StoreException;
 import com.stylelab.store.repository.StoreRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -71,12 +73,13 @@ public class StoreServiceTest {
                     .willThrow(new DataIntegrityViolationException("could not execute statement [Duplicate entry 'test@gmail.com' for key 'store_staff.idx_store_staff_email']"));
 
             //when
-            assertThrows(StoreException.class,
+            StoreException storeException = assertThrows(StoreException.class,
                     () -> storeService.applyStore(store));
 
             //then
             verify(storeRepository, times(1))
                     .save(any());
+            assertEquals(StoreError.STORE_AND_STORE_STAFF_SAVE_FAIL.getCode(), storeException.getServiceError().getCode());
         }
     }
 

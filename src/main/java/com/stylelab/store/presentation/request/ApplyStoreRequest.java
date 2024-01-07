@@ -93,7 +93,7 @@ public record ApplyStoreRequest(
                     .password(encodePassword)
                     .name(storeStaffRequest.name)
                     .nickname(storeStaffRequest.nickname)
-                    .phoneNumber(storeStaffRequest.nickname)
+                    .phoneNumber(storeStaffRequest.phoneNumber)
                     .storeStaffRole(StoreStaffRole.STORE_OWNER)
                     .build();
         }
