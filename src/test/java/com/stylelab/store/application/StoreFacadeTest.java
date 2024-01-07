@@ -1,4 +1,4 @@
-ㅈpackage com.stylelab.store.application;
+package com.stylelab.store.application;
 
 import com.stylelab.store.exception.StoreException;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
