@@ -1,6 +1,7 @@
 package com.stylelab.common.security.jwt;
 
 import com.stylelab.common.exception.ServiceException;
+import com.stylelab.common.security.constant.UserType;
 import com.stylelab.user.constant.UsersRole;
 import io.jsonwebtoken.Claims;
 import org.junit.jupiter.api.DisplayName;
@@ -30,7 +31,7 @@ public class JwtTokenProviderTest {
         final String role = UsersRole.ROLE_USER.name();
 
         // when
-        String token = jwtTokenProvider.createAuthToken(email, role);
+        String token = jwtTokenProvider.createAuthToken(email, role, UserType.USER);
 
         // then
         assertNotNull(token);
@@ -66,7 +67,7 @@ public class JwtTokenProviderTest {
         // given
         final String email = "test12@gmail.com";
         final String role = UsersRole.ROLE_USER.name();
-        final String token = jwtTokenProvider.createAuthToken(email, role);
+        final String token = jwtTokenProvider.createAuthToken(email, role, UserType.USER);
 
         // when
         assertThrows(ServiceException.class,

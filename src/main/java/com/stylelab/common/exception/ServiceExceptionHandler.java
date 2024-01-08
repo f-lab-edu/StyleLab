@@ -44,7 +44,7 @@ public class ServiceExceptionHandler {
                 .code(ServiceError.INTERNAL_SERVER_ERROR.getCode())
                 .message("내부 서버 에러입니다. 관리자에게 문의해 주십시오.")
                 .build();
-        log.error(response.getMessage(), ex.getCause());
+        log.error(response.getMessage(), ex);
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -59,7 +59,7 @@ public class ServiceExceptionHandler {
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ex.getServiceError());
         response.setMessage(
                 String.format("%s", ObjectUtils.isEmpty(ex.getMessage()) ? response.getMessage() : ex.getMessage()));
-        log.error(response.getMessage(), ex.getCause());
+        log.error(response.getMessage(), ex);
         return new ResponseEntity<>(response, response.getStatus());
     }
 
@@ -76,7 +76,7 @@ public class ServiceExceptionHandler {
                 String.format(
                         "%s",
                         ObjectUtils.isEmpty(ex.getApplicationException()) ? response.getMessage() : ex.getApplicationException().getMessage()));
-        log.error(response.getMessage(), ex.getCause());
+        log.error(response.getMessage(), ex);
         return new ResponseEntity<>(response, response.getStatus());
     }
 

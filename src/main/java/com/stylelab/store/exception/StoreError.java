@@ -36,6 +36,8 @@ public enum StoreError implements CommonError {
     NICKNAME_IS_NOT_IN_THE_CORRECT_FORMAT(HttpStatus.BAD_REQUEST, "64023", "올바르지 않은 형식의 닉네임입니다."),
     BRAND_IS_NOT_IN_THE_CORRECT_FORMAT(HttpStatus.BAD_REQUEST, "64024", "올바르지 않은 형식의 브랜드 이름입니다."),
     BUSINESS_NAME_IS_NOT_IN_THE_CORRECT_FORMAT(HttpStatus.BAD_REQUEST, "64025", "올바르지 않은 형식의 사업장 명입니다."),
+    STORE_ID_REQUIRE(HttpStatus.BAD_REQUEST, "64026", "스토어 일련번호는 필수입니다."),
+    FORBIDDEN_STORE(HttpStatus.BAD_REQUEST, "64027", "권한이 없는 사용자입니다."),
 
     STORE_AND_STORE_STAFF_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "64500", "스토어, 스토어 스태프 등록에 실패하였습니다. 관리자에가 문의해 주십시오.");
     private final HttpStatus httpStatus;

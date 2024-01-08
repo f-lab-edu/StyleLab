@@ -1,4 +1,4 @@
-package com.stylelab.common.security;
+package com.stylelab.common.security.principal;
 
 import com.stylelab.user.constant.UsersRole;
 import com.stylelab.user.domain.Users;
@@ -64,7 +64,7 @@ public class UserPrincipal implements UserDetails {
                 users.getEmail(),
                 users.getPassword(),
                 users.getRole(),
-                Collections.singletonList(new SimpleGrantedAuthority(UsersRole.ROLE_USER.name()))
+                Collections.singletonList(new SimpleGrantedAuthority(users.getRole().name()))
         );
     }
 }

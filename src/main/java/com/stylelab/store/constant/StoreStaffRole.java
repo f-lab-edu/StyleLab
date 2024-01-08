@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum StoreStaffRole {
 
-    STORE_OWNER("STORE_OWNER"),
-    STORE_STAFF("STORE_STAFF");
+    ROLE_STORE_OWNER("STORE_OWNER"),
+    ROLE_STORE_STAFF("STORE_STAFF");
 
     private final String role;
 }

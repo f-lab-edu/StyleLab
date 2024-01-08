@@ -94,7 +94,7 @@ public record ApplyStoreRequest(
                     .name(storeStaffRequest.name)
                     .nickname(storeStaffRequest.nickname)
                     .phoneNumber(storeStaffRequest.phoneNumber)
-                    .storeStaffRole(StoreStaffRole.STORE_OWNER)
+                    .storeStaffRole(StoreStaffRole.ROLE_STORE_OWNER)
                     .build();
         }
 

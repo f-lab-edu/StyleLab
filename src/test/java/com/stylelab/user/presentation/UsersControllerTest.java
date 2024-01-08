@@ -3,6 +3,7 @@ package com.stylelab.user.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stylelab.common.annotation.WithAccount;
 import com.stylelab.common.exception.ServiceError;
+import com.stylelab.common.security.constant.UserType;
 import com.stylelab.user.exception.UsersError;
 import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
 import com.stylelab.user.presentation.request.SignInRequest;
@@ -434,7 +435,7 @@ public class UsersControllerTest {
         @Rollback
         @Transactional
         @DisplayName("배송지 요청 객체의 검증이 통과하면 배송지 등록에 성공한다.")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void successCreateUserDeliveryAddressTest() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .address("경기도 성남시 분당구 정자일로 95 네이버")
@@ -455,7 +456,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("배송지 등록 실패 - 배송지 주소가 null 인 경우")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void failureCreateUserDeliveryAddress_01() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .addressDetail("문앞")
@@ -475,7 +476,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("배송지 등록 실패 - 배송지 상세 주소가 null 인 경우")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void failureCreateUserDeliveryAddress_02() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .address("경기도 성남시 분당구 정자일로 95 네이버")
@@ -495,7 +496,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("배송지 등록 실패 - 우편 번호가 null 인 경우")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void failureCreateUserDeliveryAddress_03() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .address("경기도 성남시 분당구 정자일로 95 네이버")
@@ -515,7 +516,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("배송지 등록 실패 - 배송지 주소 별칭이 null 인 경우")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void failureCreateUserDeliveryAddress_04() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .address("경기도 성남시 분당구 정자일로 95 네이버")
@@ -535,7 +536,7 @@ public class UsersControllerTest {
 
         @Test
         @DisplayName("배송지 등록 실패 - 배송지 기본 주소지 여부가 null 인 경우")
-        @WithAccount(email = "test@gmail.com", role = "ROLE_USER")
+        @WithAccount(email = "test@gmail.com", role = "ROLE_USER", type = UserType.USER)
         public void failureCreateUserDeliveryAddress_05() throws Exception {
             CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest = CreateUserDeliveryAddressRequest.builder()
                     .address("경기도 성남시 분당구 정자일로 95 네이버")

@@ -1,11 +1,11 @@
 package com.stylelab.file.application;
 
 import com.stylelab.file.constant.ExtensionType;
+import com.stylelab.file.constant.ImageType;
 import com.stylelab.file.dto.UploadFile;
 import com.stylelab.file.dto.UploadResult;
 import com.stylelab.file.exception.FileError;
 import com.stylelab.file.exception.FileException;
-import com.stylelab.file.presentation.response.ImageUploadResponse;
 import com.stylelab.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +26,8 @@ public class FileFacade {
 
     private final FileService fileService;
 
-    public ImageUploadResponse uploadMultipartFiles(final List<MultipartFile> multipartFiles) {
-        validationMultipartFiles(multipartFiles);
+    public UploadResult uploadMultipartFiles(final ImageType imageType, final List<MultipartFile> multipartFiles) {
+        validationMultipartFiles(imageType, multipartFiles);
 
         List<UploadFile> uploadFiles = new ArrayList<>();
         for (MultipartFile multipartFile : multipartFiles) {
@@ -37,13 +37,22 @@ public class FileFacade {
             uploadFiles.add(UploadFile.createUploadFile(multipartFile, uploadFilename));
         }
 
-        UploadResult uploadResult = fileService.uploadMultipartFiles(uploadFiles);
-        return ImageUploadResponse.createResponse(uploadResult);
+        return fileService.uploadMultipartFiles(uploadFiles);
     }
 
-    private void validationMultipartFiles(final List<MultipartFile> multipartFiles) {
+    private void validationMultipartFiles(final ImageType imageType, final List<MultipartFile> multipartFiles) {
+        if (imageType == null) {
+            throw new FileException(FileError.IMAGE_TYPE_REQUIRE, FileError.IMAGE_TYPE_REQUIRE.getMessage());
+        }
         if (ObjectUtils.isEmpty(multipartFiles)) {
             throw new FileException(FileError.FILE_OBJECT_REQUIRE, FileError.FILE_OBJECT_REQUIRE.getMessage());
+        }
+
+        if (multipartFiles.size() > imageType.getMaxImageCount()) {
+            throw new FileException(
+                    FileError.EXCEED_MAX_IMAGE_COUNT,
+                    String.format(FileError.EXCEED_MAX_IMAGE_COUNT.getMessage(), imageType, imageType.getMaxImageCount())
+            );
         }
 
         for (MultipartFile multipartFile : multipartFiles) {
