@@ -1,7 +1,7 @@
 package com.stylelab.user.presentation;
 
 import com.stylelab.common.dto.ApiResponse;
-import com.stylelab.common.security.UserPrincipal;
+import com.stylelab.common.security.principal.UserPrincipal;
 import com.stylelab.user.application.UsersFacade;
 import com.stylelab.user.exception.UsersError;
 import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
@@ -10,6 +10,7 @@ import com.stylelab.user.presentation.request.SignupRequest;
 import com.stylelab.user.presentation.response.ExistsByEmailResponse;
 import com.stylelab.user.presentation.response.ExistsByNicknameResponse;
 import com.stylelab.user.presentation.response.SignInResponse;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class UsersController {
     private final UsersFacade usersFacade;
 
     @PostMapping("/signup")
-    public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Validated final SignupRequest signupRequest) {
+    public ResponseEntity<ApiResponse<Void>> signup(@RequestBody @Valid final SignupRequest signupRequest) {
         usersFacade.signup(signupRequest);
         return new ResponseEntity<>(ApiResponse.createEmptyApiResponse(), HttpStatus.CREATED);
     }
@@ -59,14 +60,14 @@ public class UsersController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<ApiResponse<SignInResponse>> sigIn(@RequestBody @Validated final SignInRequest signInRequest) {
+    public ResponseEntity<ApiResponse<SignInResponse>> sigIn(@RequestBody @Valid final SignInRequest signInRequest) {
         return ResponseEntity.ok(ApiResponse.createApiResponse(usersFacade.signIn(signInRequest)));
     }
 
     @PostMapping("/deliveries")
     public ResponseEntity<ApiResponse<Void>> createUserDeliveryAddress(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody @Validated final CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
+            @RequestBody @Valid final CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
         usersFacade.createUserDeliveryAddress(userPrincipal, createUserDeliveryAddressRequest);
         return new ResponseEntity<>(ApiResponse.createEmptyApiResponse(), HttpStatus.NO_CONTENT);
     }

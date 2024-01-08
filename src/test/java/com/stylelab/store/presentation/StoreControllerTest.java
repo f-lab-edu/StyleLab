@@ -3,6 +3,7 @@ package com.stylelab.store.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stylelab.store.exception.StoreError;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
+import com.stylelab.store.presentation.request.SignInRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -15,6 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static com.stylelab.store.exception.StoreError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.store.exception.StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT;
+import static com.stylelab.store.exception.StoreError.STORE_STAFF_EMAIL_REQUIRE;
+import static com.stylelab.store.exception.StoreError.STORE_STAFF_PASSWORD_REQUIRE;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -346,8 +351,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     // then
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(StoreError.STORE_STAFF_EMAIL_REQUIRE.getCode()))
-                    .andExpect(jsonPath("$.message").value(StoreError.STORE_STAFF_EMAIL_REQUIRE.getMessage()));
+                    .andExpect(jsonPath("$.code").value(STORE_STAFF_EMAIL_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(STORE_STAFF_EMAIL_REQUIRE.getMessage()));
         }
 
         @Test
@@ -380,8 +385,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     // then
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(StoreError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
-                    .andExpect(jsonPath("$.message").value(StoreError.EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+                    .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
         }
 
         @Test
@@ -480,8 +485,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     // then
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(StoreError.STORE_STAFF_PASSWORD_REQUIRE.getCode()))
-                    .andExpect(jsonPath("$.message").value(StoreError.STORE_STAFF_PASSWORD_REQUIRE.getMessage()));
+                    .andExpect(jsonPath("$.code").value(STORE_STAFF_PASSWORD_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(STORE_STAFF_PASSWORD_REQUIRE.getMessage()));
         }
 
         @Test
@@ -514,8 +519,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     // then
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
-                    .andExpect(jsonPath("$.message").value(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+                    .andExpect(jsonPath("$.code").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
         }
 
         @Test
@@ -581,8 +586,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     // then
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.code").value(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
-                    .andExpect(jsonPath("$.message").value(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+                    .andExpect(jsonPath("$.code").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
         }
 
         @Test
@@ -717,6 +722,77 @@ public class StoreControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.code").value(StoreError.PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
                     .andExpect(jsonPath("$.message").value(StoreError.PHONE_NUMBER_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+        }
+    }
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    public class SignInTest {
+
+        @Test
+        @DisplayName("로그인 실패 - 유효하지 않은 이메일인 경우 실패")
+        public void failureSignIn_01() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@@gmail..com")
+                    .password("tester!@31241")
+                    .build();
+
+            mockMvc.perform(post("/v1/stores/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(EMAIL_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 이메일이 null 인 경우 실패")
+        public void failureSignIn_02() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .password("tester!@31241")
+                    .build();
+
+            mockMvc.perform(post("/v1/stores/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(STORE_STAFF_EMAIL_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(STORE_STAFF_EMAIL_REQUIRE.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 유효하지 않은 비밀번호인 경우 실패")
+        public void failureSignIn_03() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@gmail.com")
+                    .password("tester")
+                    .build();
+
+            mockMvc.perform(post("/v1/stores/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getCode()))
+                    .andExpect(jsonPath("$.message").value(PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage()));
+        }
+
+        @Test
+        @DisplayName("로그인 실패 - 비밀번호가 null 인 경우 실패")
+        public void failureSignIn_04() throws Exception {
+            SignInRequest signInRequest = SignInRequest.builder()
+                    .email("tester@gmail.com")
+                    .build();
+
+            mockMvc.perform(post("/v1/stores/signin")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(signInRequest)))
+                    .andDo(print())
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.code").value(STORE_STAFF_PASSWORD_REQUIRE.getCode()))
+                    .andExpect(jsonPath("$.message").value(STORE_STAFF_PASSWORD_REQUIRE.getMessage()));
         }
     }
 }

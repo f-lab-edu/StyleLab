@@ -58,7 +58,7 @@ public class StoreServiceTest {
                     .password("test1234!@#!")
                     .phoneNumber("01012341234")
                     .nickname("coby")
-                    .storeStaffRole(StoreStaffRole.STORE_OWNER)
+                    .storeStaffRole(StoreStaffRole.ROLE_STORE_OWNER)
                     .withdrawal(false)
                     .build();
 

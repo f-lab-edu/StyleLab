@@ -86,12 +86,13 @@ public class WebSecurityConfiguration {
                                 ).permitAll()
                                 .requestMatchers("/**/categories").permitAll()
                                 .requestMatchers(
-                                        "/**/stores/apply"
+                                        "/**/stores/apply",
+                                        "/**/stores/signin"
                                 ).permitAll()
                                 .requestMatchers( "/**/users/deliveries").hasRole(UsersRole.ROLE_USER.getRole())
-                                .requestMatchers( "/**/stores").hasAnyRole(
-                                        StoreStaffRole.STORE_OWNER.getRole(),
-                                        StoreStaffRole.STORE_STAFF.getRole()
+                                .requestMatchers( "/**/stores/**").hasAnyRole(
+                                        StoreStaffRole.ROLE_STORE_OWNER.getRole(),
+                                        StoreStaffRole.ROLE_STORE_STAFF.getRole()
                                 )
                                 .anyRequest().authenticated()
                 )

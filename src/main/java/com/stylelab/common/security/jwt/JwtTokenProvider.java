@@ -1,6 +1,7 @@
 package com.stylelab.common.security.jwt;
 
 import com.stylelab.common.exception.ServiceException;
+import com.stylelab.common.security.constant.UserType;
 import com.stylelab.common.security.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -33,6 +34,7 @@ public class JwtTokenProvider {
     private final SecretKey secretKey;
     private final CustomUserDetailsService customUserDetailsService;
     private static final String AUTHORITIES_KEY = "role";
+    private static final String USER_TYPE = "type";
     private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60;
 
     public JwtTokenProvider(
@@ -42,13 +44,14 @@ public class JwtTokenProvider {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    public String createAuthToken(final String email, final String role) {
+    public String createAuthToken(final String email, final String role, UserType userType) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + TOKEN_EXPIRE_TIME);
 
         return Jwts.builder()
                 .subject(email)
                 .claim(AUTHORITIES_KEY, role)
+                .claim(USER_TYPE, userType)
                 .signWith(secretKey)
                 .expiration(expireDate)
                 .compact();
@@ -65,7 +68,9 @@ public class JwtTokenProvider {
                             .collect(Collectors.toList());
 
             log.info("claims subject := [{}]", claims.getSubject());
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
+
+            UserType userType = UserType.of((String) claims.get(USER_TYPE));
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userType, claims.getSubject());
             return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
         } catch (ServiceException e) {
             log.error("token authentication fail", e);

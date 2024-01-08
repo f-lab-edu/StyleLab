@@ -58,6 +58,10 @@ public class Store extends BaseEntity  {
     @OneToMany(mappedBy = "store", cascade = CascadeType.PERSIST)
     List<StoreStaff> storeStaffs = new ArrayList<>();
 
+    private Store(Long storeId) {
+        this.storeId = storeId;
+    }
+
     @Builder
     public Store(
             String brand, String name, String address, String addressDetail, String postalCode,
@@ -74,5 +78,9 @@ public class Store extends BaseEntity  {
     public void addStoreStaff(StoreStaff storeStaff) {
         storeStaff.addStore(this);
         this.storeStaffs.add(storeStaff);
+    }
+
+    public static Store createStore(Long storeId) {
+        return new Store(storeId);
     }
 }

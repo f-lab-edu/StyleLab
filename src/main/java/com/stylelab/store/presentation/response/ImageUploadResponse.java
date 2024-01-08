@@ -1,4 +1,4 @@
-package com.stylelab.file.presentation.response;
+package com.stylelab.store.presentation.response;
 
 import com.stylelab.file.dto.UploadResult;
 
