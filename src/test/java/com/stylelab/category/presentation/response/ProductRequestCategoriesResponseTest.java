@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Slf4j
-public class ProductCategoriesResponseTest {
+public class ProductRequestCategoriesResponseTest {
 
     private List<ProductCategoriesDto> productCategoryDtos;
 

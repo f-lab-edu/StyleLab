@@ -1,7 +1,6 @@
 package com.stylelab.store.presentation.request;
 
 import com.stylelab.store.exception.StoreError;
-import com.stylelab.user.exception.UsersError;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Builder;
