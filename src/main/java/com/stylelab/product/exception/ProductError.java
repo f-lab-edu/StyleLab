@@ -26,6 +26,18 @@ public enum ProductError implements CommonError {
     OPTION2_QUANTITY_LESS_THEN_ZERO(HttpStatus.BAD_REQUEST, "67012", "상품 옵션2이 존재 시 옵션2의 수량이 0보다 작을 수 없습니다."),
     OPTION2_NAME_REQUIRE(HttpStatus.BAD_REQUEST, "67013", "상품 옵션2이 존재 시 옵션2의 이름은 필수입니다."),
     PRODUCT_REQUIRE(HttpStatus.BAD_REQUEST, "67014", "상품 등록 정보는 필수입니다."),
+    EXCEED_MAX_IMAGE_COUNT(HttpStatus.BAD_REQUEST, "67015", "%s 타입은 최대 %s개의 이미지를 등록하실 수 있습니다."),
+    PRODUCT_NAME_REQUIRE(HttpStatus.BAD_REQUEST, "67016", "상품 이름은 필수입니다."),
+    PRODUCT_PRICE_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "67017", "상품 가격은 3,000 이상 10억 이하의 값만 사용할 수 있습니다."),
+    PRODUCT_DISCOUNT_RATE_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "67018", "상품 할인율은 0 이상 100 이하의 값만 사용할 수 있습니다."),
+    PRODUCT_OPTION1_REQUEST_REQUIRE(HttpStatus.BAD_REQUEST, "67019", "상품 옵션 1 객체는 필수입니다."),
+    PRODUCT_OPTION_DEPTH_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "67020", "상품 옵션 개수는 1 이상 2이하의 값만 사용할 수 있습니다."),
+    OPTION1_ADDITIONAL_PRICE_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "67021", "옵션1 추가 가격은 0 이상 1억 이하의 값만 사용할 수 있습니다."),
+    PRODUCT_OPTION2_REQUEST_REQUIRE(HttpStatus.BAD_REQUEST, "67022", "상품 옵션 2 객체는 필수입니다."),
+    OPTION2_ADDITIONAL_PRICE_OUT_OF_RANGE(HttpStatus.BAD_REQUEST, "67023", "옵션2 추가 가격은 0 이상 1억 이하의 값만 사용할 수 있습니다."),
+    PRODUCT_OPTION1_NAME_REQUIRE(HttpStatus.BAD_REQUEST, "67024", "상품 옵션1이 존재 시 옵션1의 이름 정보는 값은 필수입니다."),
+    PRODUCT_OPTION2_NAME_REQUIRE(HttpStatus.BAD_REQUEST, "67025", "상품 옵션2이 존재 시 옵션2의 이름 정보는 값은 필수입니다."),
+    PRODUCT_IMAGES_REQUIRE(HttpStatus.BAD_REQUEST, "67026", "상품 이미지는 필수입니다."),
 
     PRODUCT_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "67500", "스토어, 스토어 스태프 등록에 실패하였습니다. 관리자에가 문의해 주십시오.");
     private final HttpStatus httpStatus;

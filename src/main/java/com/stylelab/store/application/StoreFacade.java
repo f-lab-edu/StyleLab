@@ -6,12 +6,15 @@ import com.stylelab.common.security.principal.StorePrincipal;
 import com.stylelab.common.security.service.StoreLoadUserByUsernameStrategy;
 import com.stylelab.file.application.FileFacade;
 import com.stylelab.file.constant.ImageType;
+import com.stylelab.product.application.StoreProductFacade;
 import com.stylelab.store.domain.Store;
 import com.stylelab.store.domain.StoreStaff;
 import com.stylelab.store.exception.StoreError;
 import com.stylelab.store.exception.StoreException;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
+import com.stylelab.store.presentation.request.CreateStoreProductRequest;
 import com.stylelab.store.presentation.request.SignInRequest;
+import com.stylelab.store.presentation.response.CreateStoreProductResponse;
 import com.stylelab.store.presentation.response.ImageUploadResponse;
 import com.stylelab.store.presentation.response.SignInResponse;
 import com.stylelab.store.service.StoreService;
@@ -32,12 +35,13 @@ import java.util.Objects;
 public class StoreFacade {
 
     private final FileFacade fileFacade;
+    private final StoreProductFacade storeProductFacade;
     private final StoreService storeService;
     private final PasswordEncoder passwordEncoder;
     private final StoreLoadUserByUsernameStrategy storeLoadUserByUsernameStrategy;
     private final JwtTokenProvider jwtTokenProvider;
-
-    public void applyStore(ApplyStoreRequest applyStoreRequest) {
+    
+    public void applyStore(final ApplyStoreRequest applyStoreRequest) {
         ApplyStoreRequest.StoreRequest storeRequest = applyStoreRequest.store();
         ApplyStoreRequest.StoreStaffRequest storeStaffRequest = applyStoreRequest.storeStaff();
         if (!Objects.equals(storeStaffRequest.password(), storeStaffRequest.confirmPassword())) {
@@ -61,10 +65,21 @@ public class StoreFacade {
 
     public ImageUploadResponse uploadMultipartFiles(
             StorePrincipal storePrincipal, final Long storeId, final ImageType imageType, final List<MultipartFile> multipartFiles) {
-        if (!Objects.equals(storePrincipal.getStore().getStoreId(), storeId)) {
-            throw new StoreException(StoreError.FORBIDDEN_STORE, StoreError.FORBIDDEN_STORE.getMessage());
-        }
+        validationStoreId(storePrincipal.getStore().getStoreId(), storeId);
 
         return ImageUploadResponse.createResponse(fileFacade.uploadMultipartFiles(imageType, multipartFiles));
+    }
+
+    public CreateStoreProductResponse createStoreProduct(
+            StorePrincipal storePrincipal, final Long storeId, final CreateStoreProductRequest createStoreProductRequest) {
+        validationStoreId(storePrincipal.getStore().getStoreId(), storeId);
+
+        return CreateStoreProductResponse.createResponse(storeProductFacade.createStoreProduct(storeId, CreateStoreProductRequest.createStoreProductRequestVo(createStoreProductRequest)));
+    }
+
+    private void validationStoreId(Long storePrincipalId, Long requestStoreId) {
+        if (!Objects.equals(storePrincipalId, requestStoreId)) {
+            throw new StoreException(StoreError.FORBIDDEN_STORE, StoreError.FORBIDDEN_STORE.getMessage());
+        }
     }
 }

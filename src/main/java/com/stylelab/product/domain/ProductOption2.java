@@ -1,6 +1,8 @@
 package com.stylelab.product.domain;
 
 import com.stylelab.common.base.BaseEntity;
+import com.stylelab.product.exception.ProductError;
+import com.stylelab.product.exception.ProductException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -33,7 +35,7 @@ public class ProductOption2 extends BaseEntity {
     @JoinColumn(name = "product_option1_id", nullable = false)
     private ProductOption1 productOption1;
 
-    @Column(nullable = false)
+    @Column(name = "option2_name", nullable = false)
     private String option2Name;
 
     private int quantity;
@@ -55,6 +57,10 @@ public class ProductOption2 extends BaseEntity {
     }
 
     public void addProductOption1(ProductOption1 productOption1) {
+        if (productOption1 == null) {
+            throw new ProductException(ProductError.PRODUCT_OPTION1_REQUEST_REQUIRE, ProductError.PRODUCT_OPTION1_REQUEST_REQUIRE.getMessage());
+        }
+
         this.productOption1 = productOption1;
     }
 }

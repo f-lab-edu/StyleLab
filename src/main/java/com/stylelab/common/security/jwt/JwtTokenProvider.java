@@ -2,6 +2,7 @@ package com.stylelab.common.security.jwt;
 
 import com.stylelab.common.exception.ServiceException;
 import com.stylelab.common.security.constant.UserType;
+import com.stylelab.common.security.filter.UserTypeRequestScope;
 import com.stylelab.common.security.service.CustomUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -32,6 +33,7 @@ import static com.stylelab.common.exception.ServiceError.UNAUTHORIZED;
 public class JwtTokenProvider {
 
     private final SecretKey secretKey;
+    private final UserTypeRequestScope userTypeRequestScope;
     private final CustomUserDetailsService customUserDetailsService;
     private static final String AUTHORITIES_KEY = "role";
     private static final String USER_TYPE = "type";
@@ -39,9 +41,11 @@ public class JwtTokenProvider {
 
     public JwtTokenProvider(
             @Value("${jwt.secret-key}") String secretKey,
-            CustomUserDetailsService customUserDetailsService) {
+            CustomUserDetailsService customUserDetailsService,
+            UserTypeRequestScope userTypeRequestScope) {
         this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes());
         this.customUserDetailsService = customUserDetailsService;
+        this.userTypeRequestScope = userTypeRequestScope;
     }
 
     public String createAuthToken(final String email, final String role, UserType userType) {
@@ -68,9 +72,8 @@ public class JwtTokenProvider {
                             .collect(Collectors.toList());
 
             log.info("claims subject := [{}]", claims.getSubject());
-
-            UserType userType = UserType.of((String) claims.get(USER_TYPE));
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userType, claims.getSubject());
+            userTypeRequestScope.createUserType((String) claims.get(USER_TYPE));
+            UserDetails userDetails = customUserDetailsService.loadUserByUsername(claims.getSubject());
             return new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
         } catch (ServiceException e) {
             log.error("token authentication fail", e);

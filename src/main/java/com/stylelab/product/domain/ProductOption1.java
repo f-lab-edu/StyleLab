@@ -1,6 +1,8 @@
 package com.stylelab.product.domain;
 
 import com.stylelab.common.base.BaseEntity;
+import com.stylelab.product.exception.ProductError;
+import com.stylelab.product.exception.ProductException;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +40,7 @@ public class ProductOption1 extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(nullable = false)
+    @Column(name = "option1_name", nullable = false)
     private String option1Name;
 
     private int quantity;
@@ -62,18 +65,21 @@ public class ProductOption1 extends BaseEntity {
     }
 
     public void addProduct(Product product) {
+        if (product == null) {
+            throw new ProductException(ProductError.PRODUCT_REQUIRE, ProductError.PRODUCT_REQUIRE.getMessage());
+        }
+
         this.product = product;
     }
 
-    public void additionalProductOption2(ProductOption2 productOption2) {
-        productOption2.addProductOption1(this);
-        this.productOption2s.add(productOption2);
-    }
-
     public void additionalProductOption2(List<ProductOption2> productOption2s) {
-        productOption2s.forEach(productOption2 -> {
+        if (ObjectUtils.isEmpty(productOption2s)) {
+            throw new ProductException(ProductError.PRODUCT_OPTION2_REQUEST_REQUIRE, ProductError.PRODUCT_OPTION2_REQUEST_REQUIRE.getMessage());
+        }
+
+        for (ProductOption2 productOption2 : productOption2s) {
             productOption2.addProductOption1(this);
             this.productOption2s.add(productOption2);
-        });
+        }
     }
 }
