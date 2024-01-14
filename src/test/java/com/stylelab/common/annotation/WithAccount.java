@@ -1,6 +1,7 @@
 package com.stylelab.common.annotation;
 
 import com.stylelab.common.security.WithMockCustomUserSecurityContextFactory;
+import com.stylelab.common.security.constant.UserType;
 import org.springframework.security.test.context.support.WithSecurityContext;
 
 import java.lang.annotation.Retention;
@@ -11,4 +12,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface WithAccount {
     String email();
     String role();
+    UserType type();
 }
