@@ -3,6 +3,7 @@ package com.stylelab.common.security;
 import com.stylelab.common.security.exception.CustomAccessDeniedHandler;
 import com.stylelab.common.security.exception.CustomAuthenticationEntryPoint;
 import com.stylelab.common.security.filter.JwtAuthenticationFilter;
+import com.stylelab.store.constant.StoreStaffRole;
 import com.stylelab.user.constant.UsersRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -84,10 +85,14 @@ public class WebSecurityConfiguration {
                                         "/**/users/signin"
                                 ).permitAll()
                                 .requestMatchers("/**/categories").permitAll()
+                                .requestMatchers(
+                                        "/**/stores/apply",
+                                        "/**/stores/signin"
+                                ).permitAll()
                                 .requestMatchers( "/**/users/deliveries").hasRole(UsersRole.ROLE_USER.getRole())
-                                .requestMatchers( "/**/files").hasAnyRole(
-                                        UsersRole.ROLE_STORE_OWNER.getRole(),
-                                        UsersRole.ROLE_STORE_STAFF.getRole()
+                                .requestMatchers( "/**/stores/**").hasAnyRole(
+                                        StoreStaffRole.ROLE_STORE_OWNER.getRole(),
+                                        StoreStaffRole.ROLE_STORE_STAFF.getRole()
                                 )
                                 .anyRequest().authenticated()
                 )

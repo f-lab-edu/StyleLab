@@ -1,7 +1,7 @@
 package com.stylelab.user.presentation;
 
 import com.stylelab.common.dto.ApiResponse;
-import com.stylelab.common.security.UserPrincipal;
+import com.stylelab.common.security.principal.UserPrincipal;
 import com.stylelab.user.application.UsersFacade;
 import com.stylelab.user.exception.UsersError;
 import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
@@ -67,7 +67,7 @@ public class UsersController {
     @PostMapping("/deliveries")
     public ResponseEntity<ApiResponse<Void>> createUserDeliveryAddress(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
-            @RequestBody@Valid final CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
+            @RequestBody @Valid final CreateUserDeliveryAddressRequest createUserDeliveryAddressRequest) {
         usersFacade.createUserDeliveryAddress(userPrincipal, createUserDeliveryAddressRequest);
         return new ResponseEntity<>(ApiResponse.createEmptyApiResponse(), HttpStatus.NO_CONTENT);
     }

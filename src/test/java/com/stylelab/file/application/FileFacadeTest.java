@@ -1,9 +1,9 @@
 package com.stylelab.file.application;
 
+import com.stylelab.file.constant.ImageType;
 import com.stylelab.file.dto.UploadResult;
 import com.stylelab.file.exception.FileError;
 import com.stylelab.file.exception.FileException;
-import com.stylelab.file.presentation.response.ImageUploadResponse;
 import com.stylelab.file.service.FileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -48,7 +48,7 @@ public class FileFacadeTest {
 
             // when
             FileException fileException = assertThrows(FileException.class,
-                    () -> fileFacade.uploadMultipartFiles(multipartFiles));
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_MAIN, multipartFiles));
 
             // then
             verify(fileService, times(0))
@@ -66,7 +66,7 @@ public class FileFacadeTest {
 
             // when
             FileException fileException = assertThrows(FileException.class,
-                    () -> fileFacade.uploadMultipartFiles(multipartFiles));
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_MAIN, multipartFiles));
 
             // then
             verify(fileService, times(0))
@@ -84,7 +84,7 @@ public class FileFacadeTest {
 
             // when
             FileException fileException = assertThrows(FileException.class,
-                    () -> fileFacade.uploadMultipartFiles(multipartFiles));
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_MAIN, multipartFiles));
 
             // then
             verify(fileService, times(0))
@@ -102,12 +102,104 @@ public class FileFacadeTest {
 
             // when
             FileException fileException = assertThrows(FileException.class,
-                    () -> fileFacade.uploadMultipartFiles(multipartFiles));
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_MAIN, multipartFiles));
 
             // then
             verify(fileService, times(0))
                     .uploadMultipartFiles(anyList());
             assertEquals(FileError.INVALID_FORMAT_FILE.getCode(), fileException.getServiceError().getCode());
+        }
+
+        @Test
+        @DisplayName("이미지 업로드 실패 - ImageType이 null인 FileException(IMAGE_TYPE_REQUIRE)이 발생한다.")
+        void failureUploadMultipartFiles_05() {
+            // given
+            List<MultipartFile> multipartFiles = Collections.singletonList(
+                    new MockMultipartFile("file", "mock_file.pdf", MediaType.APPLICATION_PDF_VALUE, new byte[]{'C', 'O', 'D', 'E'})
+            );
+
+            // when
+            FileException fileException = assertThrows(FileException.class,
+                    () -> fileFacade.uploadMultipartFiles(null, multipartFiles));
+
+            // then
+            verify(fileService, times(0))
+                    .uploadMultipartFiles(anyList());
+            assertEquals(FileError.IMAGE_TYPE_REQUIRE.getCode(), fileException.getServiceError().getCode());
+        }
+
+        @Test
+        @DisplayName("이미지 업로드 실패 - ImageType이 PRODUCT_ENTRY_MAIN인 경우 이미지 개수가 2개 이상이면 FileException(EXCEED_MAX_IMAGE_COUNT)이 발생한다.")
+        void failureUploadMultipartFiles_06() {
+            // given
+            List<MultipartFile> multipartFiles = Arrays.asList(
+                    new MockMultipartFile("file", "mock_file1.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file2.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'})
+            );
+
+            // when
+            FileException fileException = assertThrows(FileException.class,
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_MAIN, multipartFiles));
+            System.out.println(fileException.getMessage());
+
+            // then
+            verify(fileService, times(0))
+                    .uploadMultipartFiles(anyList());
+            assertEquals(FileError.EXCEED_MAX_IMAGE_COUNT.getCode(), fileException.getServiceError().getCode());
+        }
+
+        @Test
+        @DisplayName("이미지 업로드 실패 - ImageType이 PRODUCT_ENTRY_SUB 경우 이미지 개수가 6개 이상이면 FileException(EXCEED_MAX_IMAGE_COUNT)이 발생한다.")
+        void failureUploadMultipartFiles_07() {
+            // given
+            List<MultipartFile> multipartFiles = Arrays.asList(
+                    new MockMultipartFile("file", "mock_file1.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file2.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file3.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file4.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file5.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file6.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'})
+            );
+
+            // when
+            FileException fileException = assertThrows(FileException.class,
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_SUB, multipartFiles));
+            System.out.println(fileException.getMessage());
+
+            // then
+            verify(fileService, times(0))
+                    .uploadMultipartFiles(anyList());
+            assertEquals(FileError.EXCEED_MAX_IMAGE_COUNT.getCode(), fileException.getServiceError().getCode());
+        }
+
+        @Test
+        @DisplayName("이미지 업로드 실패 - ImageType이 PRODUCT_ENTRY_SUB 경우 이미지 개수가 11개 이상이면 FileException(EXCEED_MAX_IMAGE_COUNT)이 발생한다.")
+        void failureUploadMultipartFiles_08() {
+            // given
+            List<MultipartFile> multipartFiles = Arrays.asList(
+                    new MockMultipartFile("file", "mock_file1.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file2.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file3.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file4.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file5.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file6.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file7.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file8.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file9.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file10.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file11.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'}),
+                    new MockMultipartFile("file", "mock_file12.jpeg", MediaType.IMAGE_JPEG_VALUE, new byte[]{'C', 'O', 'D', 'E'})
+            );
+
+            // when
+            FileException fileException = assertThrows(FileException.class,
+                    () -> fileFacade.uploadMultipartFiles(ImageType.PRODUCT_DESCRIPTION, multipartFiles));
+            System.out.println(fileException.getMessage());
+
+            // then
+            verify(fileService, times(0))
+                    .uploadMultipartFiles(anyList());
+            assertEquals(FileError.EXCEED_MAX_IMAGE_COUNT.getCode(), fileException.getServiceError().getCode());
         }
 
         @Test
@@ -126,13 +218,13 @@ public class FileFacadeTest {
                     .willReturn(uploadResult);
 
             // when
-            ImageUploadResponse imageUploadResponse = fileFacade.uploadMultipartFiles(multipartFiles);
+            UploadResult result = fileFacade.uploadMultipartFiles(ImageType.PRODUCT_ENTRY_SUB, multipartFiles);
 
             // then
             verify(fileService, times(1))
                     .uploadMultipartFiles(anyList());
-            assertEquals(uploadResult.imageUrls().get(0).imageUrl(), imageUploadResponse.result().imageUrls().get(0).imageUrl());
-            assertEquals(uploadResult.failureFilenames().get(0).originFilename(), imageUploadResponse.result().failureFilenames().get(0).originFilename());
+            assertEquals(uploadResult.imageUrls().get(0).imageUrl(), result.imageUrls().get(0).imageUrl());
+            assertEquals(uploadResult.failureFilenames().get(0).originFilename(), result.failureFilenames().get(0).originFilename());
         }
     }
 }
