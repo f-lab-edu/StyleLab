@@ -2,6 +2,7 @@ package com.stylelab.common.security.service;
 
 import com.stylelab.common.exception.ServiceException;
 import com.stylelab.common.security.constant.UserType;
+import com.stylelab.common.security.filter.UserTypeRequestScope;
 import com.stylelab.store.repository.StoreStaffRepository;
 import com.stylelab.user.repository.UsersRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,8 @@ public class CustomUserDetailsServiceTest {
     private UsersRepository usersRepository;
     @Mock
     private StoreStaffRepository storeStaffRepository;
+    @Mock
+    private UserTypeRequestScope userTypeRequestScope;
 
     @InjectMocks
     private CustomUserDetailsService customUserDetailsService;
@@ -46,7 +49,7 @@ public class CustomUserDetailsServiceTest {
                         UserType.STORE, storeLoadUserByUsernameStrategy
                 )
         );
-        customUserDetailsService = new CustomUserDetailsService(loadUserByUsernameStrategyMap);
+        customUserDetailsService = new CustomUserDetailsService(loadUserByUsernameStrategyMap, userTypeRequestScope);
     }
 
     @Test

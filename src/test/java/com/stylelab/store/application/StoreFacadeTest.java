@@ -3,7 +3,6 @@ package com.stylelab.store.application;
 import com.stylelab.common.security.principal.StorePrincipal;
 import com.stylelab.file.application.FileFacade;
 import com.stylelab.file.constant.ImageType;
-import com.stylelab.file.exception.FileException;
 import com.stylelab.store.constant.StoreStaffRole;
 import com.stylelab.store.domain.Store;
 import com.stylelab.store.domain.StoreStaff;
@@ -114,6 +113,32 @@ public class StoreFacadeTest {
             //then
             verify(fileFacade, times(0))
                     .uploadMultipartFiles(any(), anyList());
+            assertEquals(StoreError.FORBIDDEN_STORE.getCode(), storeException.getServiceError().getCode());
+        }
+    }
+
+    @Nested
+    @DisplayName("스토어 상품 등록 테스트")
+    public class CreateStoreProduct {
+
+        @Test
+        @DisplayName("스토어 상품 등록 실패 - StorePrincipal의 storeId와 parameter의 storeId가 다른 경우 StoreException(FORBIDDEN_STORE)이 발생한다.")
+        public void test() throws Exception {
+            //given
+            Long storeId = 1L;
+            Store store = Store.createStore(2L);
+            StoreStaff storeStaff = StoreStaff.builder()
+                    .email("test@gmail.com")
+                    .password("tes1234!@#$!")
+                    .storeStaffRole(StoreStaffRole.ROLE_STORE_OWNER)
+                    .build();
+            StorePrincipal storePrincipal = StorePrincipal.create(store, storeStaff);
+
+            //when
+            StoreException storeException = assertThrows(StoreException.class,
+                    () -> storeFacade.createStoreProduct(storePrincipal, storeId, null));
+
+            //then
             assertEquals(StoreError.FORBIDDEN_STORE.getCode(), storeException.getServiceError().getCode());
         }
     }

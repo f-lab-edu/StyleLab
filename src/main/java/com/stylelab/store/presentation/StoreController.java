@@ -7,7 +7,9 @@ import com.stylelab.file.exception.FileError;
 import com.stylelab.store.application.StoreFacade;
 import com.stylelab.store.exception.StoreError;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
+import com.stylelab.store.presentation.request.CreateStoreProductRequest;
 import com.stylelab.store.presentation.request.SignInRequest;
+import com.stylelab.store.presentation.response.CreateStoreProductResponse;
 import com.stylelab.store.presentation.response.ImageUploadResponse;
 import com.stylelab.store.presentation.response.SignInResponse;
 import jakarta.validation.Valid;
@@ -58,6 +60,18 @@ public class StoreController {
             @RequestPart(name = "files", required = false) final List<MultipartFile> multipartFiles) {
         return new ResponseEntity<>(
                 ApiResponse.createApiResponse(storeFacade.uploadMultipartFiles(storePrincipal, storeId, imageType, multipartFiles)),
+                HttpStatus.CREATED
+        );
+    }
+
+    @PostMapping("/{storeId}/products")
+    public ResponseEntity<ApiResponse<CreateStoreProductResponse>> createStoreProduct(
+            @AuthenticationPrincipal StorePrincipal storePrincipal,
+            @NotNull(message = "STORE_ID_REQUIRE", payload = StoreError.class)
+            @PathVariable(name = "storeId") final Long storeId,
+            @RequestBody final CreateStoreProductRequest createStoreProductRequest) {
+        return new ResponseEntity<>(
+                ApiResponse.createApiResponse(storeFacade.createStoreProduct(storePrincipal, storeId, createStoreProductRequest)),
                 HttpStatus.CREATED
         );
     }
