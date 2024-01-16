@@ -89,6 +89,9 @@ public class WebSecurityConfiguration {
                                         "/**/stores/apply",
                                         "/**/stores/signin"
                                 ).permitAll()
+                                .requestMatchers(
+                                        "/**/products"
+                                ).permitAll()
                                 .requestMatchers( "/**/users/deliveries").hasRole(UsersRole.ROLE_USER.getRole())
                                 .requestMatchers( "/**/stores/**").hasAnyRole(
                                         StoreStaffRole.ROLE_STORE_OWNER.getRole(),
