@@ -3,6 +3,7 @@ package com.stylelab.category.presentation.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.stylelab.category.dto.ProductCategoriesDto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public record ProductCategoriesResponse(List<Categories> categories) {
             @JsonInclude(JsonInclude.Include.NON_NULL)
             String parentCategory,
             List<Categories> childCategories
-    ) {
+    ) implements Serializable {
 
         public static Categories of(ProductCategoriesDto productCategoriesDto) {
             return new Categories(
