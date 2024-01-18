@@ -4,6 +4,7 @@ import com.stylelab.category.dto.ProductCategoriesDto;
 import com.stylelab.category.repository.ProductCategoriesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ public class ProductCategoriesServiceImpl implements ProductCategoriesService {
     private final ProductCategoriesRepository productCategoriesRepository;
 
     @Override
+    @Cacheable("productCategoriesDtos")
     public List<ProductCategoriesDto> findAllCategories() {
         return productCategoriesRepository.findAll().stream()
                 .map(ProductCategoriesDto::toDto)

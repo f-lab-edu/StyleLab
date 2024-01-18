@@ -1,11 +1,13 @@
 package com.stylelab.category.dto;
 
+import java.io.Serializable;
+
 public record ProductCategoriesDto(
         Long productCategoryId,
         String categoryName,
         String categoryPath,
         String parentCategory
-) {
+) implements Serializable {
 
     public ProductCategoriesDto(
             String categoryName,

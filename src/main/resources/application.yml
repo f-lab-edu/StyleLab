@@ -7,6 +7,10 @@ spring:
   profiles:
     default: local
 
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
