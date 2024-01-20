@@ -10,7 +10,7 @@ public class FileException extends ServiceException {
     private final CommonError serviceError;
 
     public FileException(CommonError serviceError) {
-        super(serviceError);
+        super(serviceError, serviceError.getMessage());
         this.serviceError = serviceError;
     }
 

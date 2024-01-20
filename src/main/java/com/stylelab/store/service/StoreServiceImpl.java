@@ -27,9 +27,9 @@ public class StoreServiceImpl implements StoreService {
         try {
             storeRepository.save(store);
         } catch (DataAccessException exception) {
-            throw new StoreException(StoreError.STORE_AND_STORE_STAFF_SAVE_FAIL, StoreError.STORE_AND_STORE_STAFF_SAVE_FAIL.getMessage(), exception);
+            throw new StoreException(StoreError.STORE_AND_STORE_STAFF_SAVE_FAIL, exception);
         } catch (RuntimeException exception) {
-            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), exception);
+            throw new ServiceException(BAD_REQUEST, exception);
         }
     }
 }

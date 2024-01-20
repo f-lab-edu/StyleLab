@@ -8,7 +8,7 @@ public record SignInResponse(String token) {
 
     public static SignInResponse createResponse(String token) {
         if (!StringUtils.hasText(token)) {
-            throw new UsersException(UsersError.EMAIL_IS_REQUIRED, UsersError.EMAIL_IS_REQUIRED.getMessage());
+            throw new UsersException(UsersError.EMAIL_IS_REQUIRED);
         }
 
         return new SignInResponse(token);

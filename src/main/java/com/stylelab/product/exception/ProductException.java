@@ -18,7 +18,7 @@ public class ProductException extends ServiceException {
     }
 
     public ProductException(CommonError serviceError, Throwable cause) {
-        super(serviceError, cause);
+        super(serviceError, serviceError.getMessage(), cause);
         this.serviceError = serviceError;
     }
 
