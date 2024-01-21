@@ -5,52 +5,55 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.stylelab.common.exception.CommonError;
 import com.stylelab.common.exception.ServiceError;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class ApiResponse<T> {
+public record ApiResponse<T>(
+        @JsonIgnore
+        HttpStatus status,
+        String code,
+        String message,
+        @JsonUnwrapped
+        @JsonInclude(value= NON_NULL)
+        T body
+) {
 
-    @Builder.Default
-    @JsonIgnore
-    private HttpStatus status = HttpStatus.OK;
 
-    @Builder.Default
-    private String code = ServiceError.OK.getCode();
 
-    @Builder.Default
-    private String message = ServiceError.OK.getMessage();
-
-    @JsonUnwrapped
-    @JsonInclude(value= NON_NULL)
-    private T body;
-
-    public static <T> ApiResponse<T> createEmptyApiResponse() {
-        return ApiResponse.<T>builder()
+    public static ApiResponse<Void> createEmptyApiResponse() {
+        return ApiResponse.<Void>builder()
+                .status(HttpStatus.OK)
+                .code(ServiceError.OK.getCode())
+                .message(ServiceError.OK.getMessage())
                 .build();
     }
 
     public static <T> ApiResponse<T> createApiResponse(T body) {
         return ApiResponse.<T>builder()
+                .status(HttpStatus.OK)
+                .code(ServiceError.OK.getCode())
+                .message(ServiceError.OK.getMessage())
                 .body(body)
                 .build();
     }
 
-    public static <T> ApiResponse<T> createApiResponseFromCommonError(CommonError serviceCommonError) {
-        return ApiResponse.<T>builder()
+    public static  ApiResponse<Void> createApiResponseFromCommonError(CommonError serviceCommonError) {
+        return ApiResponse.<Void>builder()
                 .status(serviceCommonError.getHttpStatus())
                 .code(serviceCommonError.getCode())
                 .message(serviceCommonError.getMessage())
+                .build();
+    }
+
+    public static  ApiResponse<Void> createApiResponseFromCommonError(CommonError serviceCommonError, String message) {
+        return ApiResponse.<Void>builder()
+                .status(serviceCommonError.getHttpStatus())
+                .code(serviceCommonError.getCode())
+                .message(StringUtils.hasText(message) ? message: serviceCommonError.getMessage())
                 .build();
     }
 }

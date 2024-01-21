@@ -27,9 +27,9 @@ public class UsersServiceImpl implements UsersService {
         try {
             usersRepository.save(users);
         } catch (DataAccessException exception) {
-            throw new UsersException(USERS_SAVE_FAIL, USERS_SAVE_FAIL.getMessage(), exception);
+            throw new UsersException(USERS_SAVE_FAIL, exception);
         } catch (RuntimeException exception) {
-            throw new ServiceException(BAD_REQUEST, BAD_REQUEST.getMessage(), exception);
+            throw new ServiceException(BAD_REQUEST, exception);
         }
     }
 

@@ -45,7 +45,7 @@ public class StoreFacade {
         ApplyStoreRequest.StoreRequest storeRequest = applyStoreRequest.store();
         ApplyStoreRequest.StoreStaffRequest storeStaffRequest = applyStoreRequest.storeStaff();
         if (!Objects.equals(storeStaffRequest.password(), storeStaffRequest.confirmPassword())) {
-            throw new StoreException(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT, StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT.getMessage());
+            throw new StoreException(StoreError.PASSWORD_IS_NOT_IN_THE_CORRECT_FORMAT);
         }
 
         Store store = ApplyStoreRequest.StoreRequest.toEntity(storeRequest);
@@ -79,7 +79,7 @@ public class StoreFacade {
 
     private void validationStoreId(Long storePrincipalId, Long requestStoreId) {
         if (!Objects.equals(storePrincipalId, requestStoreId)) {
-            throw new StoreException(StoreError.FORBIDDEN_STORE, StoreError.FORBIDDEN_STORE.getMessage());
+            throw new StoreException(StoreError.FORBIDDEN_STORE);
         }
     }
 }

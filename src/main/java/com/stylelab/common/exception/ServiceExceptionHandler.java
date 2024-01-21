@@ -44,8 +44,8 @@ public class ServiceExceptionHandler {
                 .code(ServiceError.INTERNAL_SERVER_ERROR.getCode())
                 .message("내부 서버 에러입니다. 관리자에게 문의해 주십시오.")
                 .build();
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -56,11 +56,10 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiResponse<Void>> handleServiceException(ServiceException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ex.getServiceError());
-        response.setMessage(
-                String.format("%s", ObjectUtils.isEmpty(ex.getMessage()) ? response.getMessage() : ex.getMessage()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format("%s", ObjectUtils.isEmpty(ex.getMessage()) ? ex.getServiceError().getMessage() : ex.getMessage());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ex.getServiceError(), message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -71,13 +70,13 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(TransactionSystemException.class)
     public ResponseEntity<ApiResponse<Void>> handleTransactionSystemException(TransactionSystemException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.INTERNAL_SERVER_ERROR);
-        response.setMessage(
-                String.format(
-                        "%s",
-                        ObjectUtils.isEmpty(ex.getApplicationException()) ? response.getMessage() : ex.getApplicationException().getMessage()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format(
+                "%s",
+                ObjectUtils.isEmpty(ex.getApplicationException()) ?
+                        ServiceError.INTERNAL_SERVER_ERROR.getMessage() : ex.getApplicationException().getMessage());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.INTERNAL_SERVER_ERROR, message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -103,18 +102,14 @@ public class ServiceExceptionHandler {
 
         ApiResponse<Void> response;
         if (commonError == null) {
-            response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST);
-            response.setMessage(String.format("%s", ex.getMessage()));
+            String message = String.format("%s", ex.getMessage());
+            response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
         } else {
-            response = ApiResponse.<Void>builder()
-                    .status(commonError.getHttpStatus())
-                    .code(commonError.getCode())
-                    .message(commonError.getMessage())
-                    .build();
+            response = ApiResponse.createApiResponseFromCommonError(commonError);
         }
 
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -138,18 +133,14 @@ public class ServiceExceptionHandler {
 
         ApiResponse<Void> response;
         if (commonError == null) {
-            response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST);
-            response.setMessage(String.format("%s", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
+            String message = String.format("%s", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+            response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
         } else {
-            response = ApiResponse.<Void>builder()
-                    .status(commonError.getHttpStatus())
-                    .code(commonError.getCode())
-                    .message(commonError.getMessage())
-                    .build();
+            response = ApiResponse.createApiResponseFromCommonError(commonError);
         }
 
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -160,10 +151,10 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ApiResponse<Void>> handleBindException(BindException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST);
-        response.setMessage(String.format("%s", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format("%s", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -174,10 +165,10 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_MEDIA_TYPE);
-        response.setMessage(String.format("%s media type은 지원하지 않습니다.", ex.getContentType()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format("%s media type은 지원하지 않습니다.", ex.getContentType());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_MEDIA_TYPE, message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -188,10 +179,10 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_PARAMETER_TYPE);
-        response.setMessage(String.format(ServiceError.UNSUPPORTED_PARAMETER_TYPE.getMessage(), ex.getName(), ex.getValue()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format(ServiceError.UNSUPPORTED_PARAMETER_TYPE.getMessage(), ex.getName(), ex.getValue());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_PARAMETER_TYPE, message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -202,10 +193,10 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(MissingServletRequestPartException.class)
     public ResponseEntity<ApiResponse<Void>> handleMissingServletRequestPartException(MissingServletRequestPartException ex) {
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST);
-        response.setMessage(String.format("%s 입력은 필수입니다.", ex.getRequestPartName()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format("%s 입력은 필수입니다.", ex.getRequestPartName());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     /**
@@ -217,12 +208,12 @@ public class ServiceExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse<Void>> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
         String requestUri = request.getRequestURI();
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.METHOD_NOT_ALLOWED);
-        response.setMessage(
-                String.format("requestUri : %s, requestHttpMethod : %s, supportHttpMethod : %s",
-                        requestUri, Objects.requireNonNull(ex.getSupportedMethods())[0], ex.getMethod()));
-        log.error(response.getMessage(), ex);
-        return new ResponseEntity<>(response, response.getStatus());
+        String message = String.format("requestUri : %s, requestHttpMethod : %s, supportHttpMethod : %s",
+                requestUri, Objects.requireNonNull(ex.getSupportedMethods())[0], ex.getMethod());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.METHOD_NOT_ALLOWED, message);
+
+        log.error(response.message(), ex);
+        return new ResponseEntity<>(response, response.status());
     }
 
     private Set<Class<? extends Payload>> getPayloads(FieldError error) {

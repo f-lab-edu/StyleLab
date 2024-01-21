@@ -8,7 +8,7 @@ public class StoreException extends ServiceException {
     private final CommonError serviceError;
 
     public StoreException(CommonError serviceError) {
-        super(serviceError);
+        super(serviceError, serviceError.getMessage());
         this.serviceError = serviceError;
     }
 
@@ -18,7 +18,7 @@ public class StoreException extends ServiceException {
     }
 
     public StoreException(CommonError serviceError, Throwable cause) {
-        super(serviceError, cause);
+        super(serviceError, serviceError.getMessage(), cause);
         this.serviceError = serviceError;
     }
 
