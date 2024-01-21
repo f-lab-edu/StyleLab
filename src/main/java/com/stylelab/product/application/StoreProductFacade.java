@@ -38,11 +38,11 @@ public class StoreProductFacade {
         validationCreateStoreProductRequest(storeId, createStoreProductRequestVo);
 
         Product product = createProduct(storeId, createStoreProductRequestVo.productRequest());
-        addProductImages(createStoreProductRequestVo, product);
+        product.addProductImages(getProductImages(createStoreProductRequestVo));
 
-        boolean useOption = createStoreProductRequestVo.productRequest().useOption();
+        boolean useOption = createStoreProductRequestVo.getUseOption();
         if (useOption) {
-            addProductOptions(createStoreProductRequestVo, product);
+            product.additionalProductOption1(getProductOption1s(createStoreProductRequestVo));
         }
 
         return CreateStoreProductResponseVo.createResponse(storeProductService.createStoreProduct(product));
@@ -143,42 +143,40 @@ public class StoreProductFacade {
 
     private void validationProductOptions(CreateStoreProductRequestVo createStoreProductRequestVo) {
         int minimumQuantity = 0;
+        boolean useOption = createStoreProductRequestVo.getUseOption();
+        if (!useOption) {
+            int productQuantity = createStoreProductRequestVo.getQuantity();
+            if (productQuantity < minimumQuantity) {
+                throw new ProductException(ProductError.PRODUCT_QUANTITY_LESS_THEN_ZERO);
+            }
+
+            return;
+        }
+
         int minimumOptionDepth = 0;
         int maximumOptionDepth = 2;
-        boolean useOption = createStoreProductRequestVo.productRequest().useOption();
-        if (!useOption) {
-            int productQuantity = createStoreProductRequestVo.productRequest().quantity();
-            validationNotUseProductOption(productQuantity, minimumQuantity);
-        } else {
-            int minimumOptionAdditionalPrice = 0;
-            int maximumOptionAdditionalPrice = 100_000_000;
-            int optionDepth = createStoreProductRequestVo.productRequest().optionDepth();
+        int minimumOptionAdditionalPrice = 0;
+        int maximumOptionAdditionalPrice = 100_000_000;
+        int optionDepth = createStoreProductRequestVo.getOptionDepth();
 
-            if (optionDepth <= minimumOptionDepth || optionDepth > maximumOptionDepth) {
-                throw new ProductException(ProductError.PRODUCT_OPTION_DEPTH_OUT_OF_RANGE);
-            }
-
-            String option1 = createStoreProductRequestVo.productRequest().option1();
-            if (!StringUtils.hasText(option1)) {
-                throw new ProductException(ProductError.PRODUCT_OPTION1_NAME_REQUIRE);
-            }
-
-            if (optionDepth == maximumOptionDepth) {
-                String option2 = createStoreProductRequestVo.productRequest().option2();
-                if (!StringUtils.hasText(option2)) {
-                    throw new ProductException(ProductError.PRODUCT_OPTION2_NAME_REQUIRE);
-                }
-            }
-
-            List<ProductOption1sRequest> productOption1sRequests = createStoreProductRequestVo.productOption1SRequest();
-            validationProductOption1(optionDepth, minimumQuantity, minimumOptionAdditionalPrice, maximumOptionAdditionalPrice, productOption1sRequests);
+        if (optionDepth <= minimumOptionDepth || optionDepth > maximumOptionDepth) {
+            throw new ProductException(ProductError.PRODUCT_OPTION_DEPTH_OUT_OF_RANGE);
         }
-    }
 
-    private void validationNotUseProductOption(int productQuantity, int minimumQuantity) {
-        if (productQuantity < minimumQuantity) {
-            throw new ProductException(ProductError.PRODUCT_QUANTITY_LESS_THEN_ZERO);
+        String option1 = createStoreProductRequestVo.getOption1Name();
+        if (!StringUtils.hasText(option1)) {
+            throw new ProductException(ProductError.PRODUCT_OPTION1_NAME_REQUIRE);
         }
+
+        if (optionDepth == maximumOptionDepth) {
+            String option2 = createStoreProductRequestVo.getOption2Name();
+            if (!StringUtils.hasText(option2)) {
+                throw new ProductException(ProductError.PRODUCT_OPTION2_NAME_REQUIRE);
+            }
+        }
+
+        List<ProductOption1sRequest> productOption1sRequests = createStoreProductRequestVo.productOption1SRequest();
+        validationProductOption1(optionDepth, minimumQuantity, minimumOptionAdditionalPrice, maximumOptionAdditionalPrice, productOption1sRequests);
     }
 
     private void validationProductOption1(
@@ -204,10 +202,11 @@ public class StoreProductFacade {
                 if (option1Quantity < minimumQuantity) {
                     throw new ProductException(ProductError.OPTION1_EXISTS_PRODUCT_QUANTITY_GRATE_THEN_ZERO);
                 }
-            } else {
-                List<ProductOption2sRequest> productOption2sRequests = productOption1sRequest.productOption2sRequest();
-                validationProductOption2(minimumQuantity, minimumOptionAdditionalPrice, maximumOptionAdditionalPrice, productOption2sRequests);
+                return;
             }
+
+            List<ProductOption2sRequest> productOption2sRequests = productOption1sRequest.productOption2sRequest();
+            validationProductOption2(minimumQuantity, minimumOptionAdditionalPrice, maximumOptionAdditionalPrice, productOption2sRequests);
         }
     }
 
@@ -244,7 +243,7 @@ public class StoreProductFacade {
         return product;
     }
 
-    private void addProductImages(CreateStoreProductRequestVo createStoreProductRequestVo, Product product) {
+    private List<ProductImage> getProductImages(CreateStoreProductRequestVo createStoreProductRequestVo) {
         List<ProductImage> productImages = new ArrayList<>();
 
         productImages.add(EntryMain.createEntryMainProductImage(createStoreProductRequestVo.entryMain()));
@@ -259,12 +258,12 @@ public class StoreProductFacade {
             productImages.add(Description.createDescriptionProductImage(description));
         }
 
-        product.addProductImages(productImages);
+        return productImages;
     }
 
-    private void addProductOptions(CreateStoreProductRequestVo createStoreProductRequestVo, Product product) {
+    private List<ProductOption1> getProductOption1s(CreateStoreProductRequestVo createStoreProductRequestVo) {
         int maximumOptionDepth = 2;
-        int optionDepth = createStoreProductRequestVo.productRequest().optionDepth();
+        int optionDepth = createStoreProductRequestVo.getOptionDepth();
         List<ProductOption1> productOption1s = new ArrayList<>();
         List<ProductOption1sRequest> productOption1sRequests = createStoreProductRequestVo.productOption1SRequest();
         for (ProductOption1sRequest productOption1sRequest : productOption1sRequests) {
@@ -272,20 +271,20 @@ public class StoreProductFacade {
             productOption1s.add(productOption1);
 
             if (optionDepth == maximumOptionDepth) {
-                addProductOption2(productOption1sRequest.productOption2sRequest(), productOption1);
+                productOption1.additionalProductOption2(getProductOption2s(productOption1sRequest.productOption2sRequest()));
             }
         }
 
-        product.additionalProductOption1(productOption1s);
+        return productOption1s;
     }
 
-    private void addProductOption2(List<ProductOption2sRequest> productOption2sRequests, ProductOption1 productOption1) {
+    private List<ProductOption2> getProductOption2s(List<ProductOption2sRequest> productOption2sRequests) {
         List<ProductOption2> productOption2s = new ArrayList<>();
         for (ProductOption2sRequest productOption2sRequest : productOption2sRequests) {
             ProductOption2 productOption2 = ProductOption2sRequest.createProductOption2(productOption2sRequest);
             productOption2s.add(productOption2);
         }
 
-        productOption1.additionalProductOption2(productOption2s);
+        return productOption2s;
     }
 }
