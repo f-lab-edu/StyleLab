@@ -130,4 +130,24 @@ public record CreateStoreProductRequestVo(
                     .build();
         }
     }
+
+    public boolean getUseOption() {
+        return this.productRequest.useOption;
+    }
+
+    public int getQuantity() {
+       return this.productRequest.quantity;
+    }
+
+    public int getOptionDepth() {
+        return this.productRequest.optionDepth;
+    }
+
+    public String getOption1Name() {
+        return this.productRequest.option1;
+    }
+
+    public String getOption2Name() {
+        return this.productRequest.option2;
+    }
 }

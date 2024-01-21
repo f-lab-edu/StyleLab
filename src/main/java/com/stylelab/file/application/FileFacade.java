@@ -42,10 +42,10 @@ public class FileFacade {
 
     private void validationMultipartFiles(final ImageType imageType, final List<MultipartFile> multipartFiles) {
         if (imageType == null) {
-            throw new FileException(FileError.IMAGE_TYPE_REQUIRE, FileError.IMAGE_TYPE_REQUIRE.getMessage());
+            throw new FileException(FileError.IMAGE_TYPE_REQUIRE);
         }
         if (ObjectUtils.isEmpty(multipartFiles)) {
-            throw new FileException(FileError.FILE_OBJECT_REQUIRE, FileError.FILE_OBJECT_REQUIRE.getMessage());
+            throw new FileException(FileError.FILE_OBJECT_REQUIRE);
         }
 
         if (multipartFiles.size() > imageType.getMaxImageCount()) {
@@ -57,17 +57,17 @@ public class FileFacade {
 
         for (MultipartFile multipartFile : multipartFiles) {
             if (multipartFile.isEmpty()) {
-                throw new FileException(FileError.FILE_SIZE_CANNOT_LESS_THEN_ZERO, FileError.FILE_SIZE_CANNOT_LESS_THEN_ZERO.getMessage());
+                throw new FileException(FileError.FILE_SIZE_CANNOT_LESS_THEN_ZERO);
             }
             if (!StringUtils.hasText(multipartFile.getOriginalFilename())) {
-                throw new FileException(FileError.FILE_ORIGIN_NAME_REQUIRE, FileError.FILE_ORIGIN_NAME_REQUIRE.getMessage());
+                throw new FileException(FileError.FILE_ORIGIN_NAME_REQUIRE);
             }
 
             String originalFilename = multipartFile.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf(".")).toLowerCase();
             if (!StringUtils.hasText(extension) || !validationExtension(extension)) {
                 log.error("originFilename:{} , extension: {}", originalFilename, extension);
-                throw new FileException(FileError.INVALID_FORMAT_FILE, FileError.INVALID_FORMAT_FILE.getMessage());
+                throw new FileException(FileError.INVALID_FORMAT_FILE);
             }
         }
     }

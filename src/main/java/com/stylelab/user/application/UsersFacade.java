@@ -39,7 +39,7 @@ public class UsersFacade {
     public void signup(final SignupRequest signupRequest) {
         if (!Objects.equals(signupRequest.password(), signupRequest.confirmPassword())) {
             log.error(PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
-            throw new UsersException(PASSWORD_VERIFICATION_NOT_MATCH, PASSWORD_VERIFICATION_NOT_MATCH.getMessage());
+            throw new UsersException(PASSWORD_VERIFICATION_NOT_MATCH);
         }
 
         String encodePassword = passwordEncoder.encode(signupRequest.password());

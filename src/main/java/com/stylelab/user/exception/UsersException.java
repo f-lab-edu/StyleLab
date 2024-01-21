@@ -10,7 +10,7 @@ public class UsersException extends ServiceException {
     private final CommonError serviceError;
 
     public UsersException(CommonError serviceError) {
-        super(serviceError);
+        super(serviceError, serviceError.getMessage());
         this.serviceError = serviceError;
     }
 
@@ -20,7 +20,7 @@ public class UsersException extends ServiceException {
     }
 
     public UsersException(CommonError serviceError, Throwable cause) {
-        super(serviceError, cause);
+        super(serviceError, serviceError.getMessage(), cause);
         this.serviceError = serviceError;
     }
 
