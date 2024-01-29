@@ -3,6 +3,9 @@ package com.stylelab.category.constant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 @Getter
 @AllArgsConstructor
 public enum ProductCategoryType {
@@ -45,4 +48,10 @@ public enum ProductCategoryType {
     private final String productCategoryPath;
     private final String productCategoryName;
     private final ProductCategoryType productCategoryType;
+
+    public static Optional<ProductCategoryType> of(String productCategoryPath) {
+        return Arrays.stream(ProductCategoryType.values())
+                .filter(productCategoryType -> productCategoryType.productCategoryPath.equalsIgnoreCase(productCategoryPath))
+                .findAny();
+    }
 }
