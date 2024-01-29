@@ -22,7 +22,7 @@ import static com.stylelab.category.domain.top.QTopProductCategory.topProductCat
 
 @Slf4j
 @SpringBootTest
-@ActiveProfiles(profiles = "test")
+@ActiveProfiles(profiles = "local")
 public class ProductCategoryTest {
 
     @Autowired
