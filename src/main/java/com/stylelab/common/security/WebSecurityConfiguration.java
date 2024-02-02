@@ -84,7 +84,10 @@ public class WebSecurityConfiguration {
                                         "/**/users/check-nickname",
                                         "/**/users/signin"
                                 ).permitAll()
-                                .requestMatchers("/**/categories").permitAll()
+                                .requestMatchers(
+                                        "/**/categories",
+                                        "/**/categories/{productCategoryPath}"
+                                ).permitAll()
                                 .requestMatchers(
                                         "/**/stores/apply",
                                         "/**/stores/signin"

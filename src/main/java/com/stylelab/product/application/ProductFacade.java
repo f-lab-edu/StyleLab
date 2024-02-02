@@ -17,7 +17,7 @@ public class ProductFacade {
 
     public PagingResponse<ProductCollectionResponse> findByProductByConditions(
             String productName, String productCategoryPath, Integer price1, Integer price2, Integer discountRate, Pageable pageable) {
-        return PagingResponse.createPagingResponse(
+        return PagingResponse.createOffSetPagingResponse(
                 productService.findByProductByConditions(productName, productCategoryPath, price1, price2, discountRate, pageable)
                         .map(ProductCollectionResponse::createProductCollectionResponse)
         );

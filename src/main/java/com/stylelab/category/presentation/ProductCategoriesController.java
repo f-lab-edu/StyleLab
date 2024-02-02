@@ -2,12 +2,18 @@ package com.stylelab.category.presentation;
 
 import com.stylelab.category.application.ProductCategoriesFacade;
 import com.stylelab.category.presentation.response.ProductCategoriesResponse;
+import com.stylelab.category.presentation.response.ProductCategoryCollectionResponse;
 import com.stylelab.common.dto.ApiResponse;
+import com.stylelab.common.dto.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -21,5 +27,25 @@ public class ProductCategoriesController {
     @GetMapping
     public ResponseEntity<ApiResponse<ProductCategoriesResponse>> findAll() {
         return ResponseEntity.ok(ApiResponse.createApiResponse(productCategoriesFacade.findAllCategories()));
+    }
+
+    @GetMapping("/{productCategoryPath}")
+    public ResponseEntity<ApiResponse<PagingResponse<ProductCategoryCollectionResponse>>> findByProductByConditions(
+            @PathVariable(name = "productCategoryPath", required = false) String productCategoryPath,
+            @RequestParam(name = "productId", required = false) Long productId,
+            @RequestParam(name = "productName", required = false) String productName,
+            @RequestParam(name = "price1", required = false) Integer price1,
+            @RequestParam(name = "price2", required = false) Integer price2,
+            @RequestParam(name = "discountRate", required = false) Integer discountRate,
+            Pageable pageable) {
+
+        new ResponseEntity<>(null, HttpStatus.OK);
+        return ResponseEntity.ok(
+                ApiResponse.createApiResponse(
+                        productCategoriesFacade.findAllProductCategoryConditions(
+                                productId, productName, productCategoryPath, price1, price2, discountRate, pageable
+                        )
+                )
+        );
     }
 }
