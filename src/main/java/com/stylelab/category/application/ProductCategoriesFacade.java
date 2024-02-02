@@ -38,9 +38,10 @@ public class ProductCategoriesFacade {
         ProductCategoryType productCategoryType = ProductCategoryType.of(productCategoryPath)
                 .orElseThrow(() ->  new ProductCategoryException(ProductCategoryError.INVALID_PRODUCT_CATEGORY_PATH));
 
-        Slice<ProductCategoryCollection> productCategoryConditions = productCategoriesService.findAllProductCategoryConditions(
-                productCategoryType, productId, productName, productCategoryPath,
-                price1, price2, discountRate, pageable);
+        Slice<ProductCategoryCollection> productCategoryConditions =
+                productCategoriesService.findAllProductCategoryConditions(
+                        productCategoryType, productId, productName, productCategoryPath, price1, price2, discountRate, pageable
+                );
 
         int contentSize = productCategoryConditions.getSize();
         List<ProductCategoryCollection> content = productCategoryConditions.getContent();

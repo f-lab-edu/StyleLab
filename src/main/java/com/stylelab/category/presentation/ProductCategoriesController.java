@@ -8,6 +8,7 @@ import com.stylelab.common.dto.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,8 @@ public class ProductCategoriesController {
             @RequestParam(name = "price2", required = false) Integer price2,
             @RequestParam(name = "discountRate", required = false) Integer discountRate,
             Pageable pageable) {
+
+        new ResponseEntity<>(null, HttpStatus.OK);
         return ResponseEntity.ok(
                 ApiResponse.createApiResponse(
                         productCategoriesFacade.findAllProductCategoryConditions(
