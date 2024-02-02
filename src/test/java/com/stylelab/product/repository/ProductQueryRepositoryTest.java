@@ -207,6 +207,22 @@ public class ProductQueryRepositoryTest {
         log.info("findByProductByConditionsCount: {}", count);
     }
 
+    @Test
+    @DisplayName("상품 목록 조회 cursor paging query test")
+    public void cursorFindByProductByConditions_04() throws Exception {
+        //given
+        String productCategoryPath = "001001001";
+        Integer discountRate = 10;
+        Integer price1 = 35000;
+        Integer price2 = null;
+        Pageable pageable = PageRequest.of(0, 10);
+
+        //when
+        // TODO Slice
+
+        //then
+    }
+
     private BooleanExpression likeProductCategoryPath(String productCategoryPath) {
         if (!StringUtils.hasText(productCategoryPath)) {
             return null;
@@ -214,6 +230,8 @@ public class ProductQueryRepositoryTest {
 
         return product.productCategoryPath.like(productCategoryPath + "%");
     }
+
+
 
     private BooleanExpression eqDiscountRate(Integer discountRate) {
         if (discountRate == null) {
