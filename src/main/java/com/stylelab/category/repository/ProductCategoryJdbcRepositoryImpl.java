@@ -98,14 +98,14 @@ public class ProductCategoryJdbcRepositoryImpl implements ProductCategoryJdbcRep
         String goePrice;
         if (price1 != null && price2 == null) {
             params.add(price1);
-            goePrice = "price >= ?";
+            goePrice = "and price >= ? \n";
         } else if (price1 != null) {
             params.add(price1);
             params.add(price2);
-            goePrice = "price >= ? and price <= p2";
+            goePrice = "and price >= ? and price <= ? \n";
         } else {
             params.add(price2);
-            goePrice = "price <= ?";
+            goePrice = "and price <= ? \n";
         }
 
         return goePrice;
