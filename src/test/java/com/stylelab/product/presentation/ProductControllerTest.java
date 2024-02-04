@@ -1,6 +1,5 @@
 package com.stylelab.product.presentation;
 
-import com.stylelab.common.exception.ServiceError;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,8 +42,8 @@ public class ProductControllerTest {
                     .andDo(print())
                     //then
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+                    .andExpect(jsonPath("$.code").value("20000"))
+                    .andExpect(jsonPath("$.message").value("success"));
         }
     }
 }

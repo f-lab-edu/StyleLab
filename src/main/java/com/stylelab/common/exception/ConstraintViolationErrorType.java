@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ErrorHandler {
+public enum ConstraintViolationErrorType {
 
     USERS_ERROR {
         @Override
