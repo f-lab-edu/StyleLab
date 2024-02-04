@@ -13,7 +13,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ServiceErrorHandlerMap {
+public class ConstraintViolationErrorMap {
 
-    private Map<String, ErrorHandler> errorHandlerMap;
+    private Map<String, ConstraintViolationErrorType> errorHandlerMap;
 }

@@ -29,7 +29,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ServiceExceptionHandler {
 
-    private final ServiceErrorHandlerMap serviceErrorHandlerMap;
+    private final ConstraintViolationErrorMap constraintViolationErrorMap;
 
     /**
      * Exception Handler
@@ -39,13 +39,9 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception ex) {
-        ApiResponse<Void> response = ApiResponse.<Void>builder()
-                .status(ServiceError.INTERNAL_SERVER_ERROR.getHttpStatus())
-                .code(ServiceError.INTERNAL_SERVER_ERROR.getCode())
-                .message("내부 서버 에러입니다. 관리자에게 문의해 주십시오.")
-                .build();
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.INTERNAL_SERVER_ERROR);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.INTERNAL_SERVER_ERROR.getHttpStatus());
     }
 
     /**
@@ -56,10 +52,11 @@ public class ServiceExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<ApiResponse<Void>> handleServiceException(ServiceException ex) {
-        String message = String.format("%s", ObjectUtils.isEmpty(ex.getMessage()) ? ex.getServiceError().getMessage() : ex.getMessage());
-        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ex.getServiceError(), message);
+        CommonError serviceError = ex.getServiceError();
+        String message = String.format("%s", ObjectUtils.isEmpty(ex.getMessage()) ? serviceError.getMessage() : ex.getMessage());
+        ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(serviceError, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, serviceError.getHttpStatus());
     }
 
     /**
@@ -76,7 +73,7 @@ public class ServiceExceptionHandler {
                         ServiceError.INTERNAL_SERVER_ERROR.getMessage() : ex.getApplicationException().getMessage());
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.INTERNAL_SERVER_ERROR, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.INTERNAL_SERVER_ERROR.getHttpStatus());
     }
 
     /**
@@ -94,7 +91,7 @@ public class ServiceExceptionHandler {
             Set<Class<? extends Payload>> payloads = constraintDescriptor.getPayload();
             if (!payloads.isEmpty()) {
                 Class<? extends Payload> payload = payloads.iterator().next();
-                commonError = serviceErrorHandlerMap.getErrorHandlerMap().get(payload.getName())
+                commonError = constraintViolationErrorMap.getErrorHandlerMap().get(payload.getName())
                         .of(constraintViolation.getMessage());
                 break;
             }
@@ -109,7 +106,7 @@ public class ServiceExceptionHandler {
         }
 
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.BAD_REQUEST.getHttpStatus());
     }
 
     /**
@@ -125,7 +122,7 @@ public class ServiceExceptionHandler {
             Set<Class<? extends Payload>> payloads = getPayloads(fieldError);
             if (!payloads.isEmpty()) {
                 Class<? extends Payload> payload = payloads.iterator().next();
-                commonError  = serviceErrorHandlerMap.getErrorHandlerMap().get(payload.getName())
+                commonError  = constraintViolationErrorMap.getErrorHandlerMap().get(payload.getName())
                         .of(fieldError.getDefaultMessage());
                 break;
             }
@@ -140,7 +137,7 @@ public class ServiceExceptionHandler {
         }
 
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.BAD_REQUEST.getHttpStatus());
     }
 
     /**
@@ -154,7 +151,7 @@ public class ServiceExceptionHandler {
         String message = String.format("%s", ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.BAD_REQUEST.getHttpStatus());
     }
 
     /**
@@ -168,7 +165,7 @@ public class ServiceExceptionHandler {
         String message = String.format("%s media type은 지원하지 않습니다.", ex.getContentType());
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_MEDIA_TYPE, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.UNSUPPORTED_MEDIA_TYPE.getHttpStatus());
     }
 
     /**
@@ -182,7 +179,7 @@ public class ServiceExceptionHandler {
         String message = String.format(ServiceError.UNSUPPORTED_PARAMETER_TYPE.getMessage(), ex.getName(), ex.getValue());
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.UNSUPPORTED_PARAMETER_TYPE, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.UNSUPPORTED_PARAMETER_TYPE.getHttpStatus());
     }
 
     /**
@@ -196,7 +193,7 @@ public class ServiceExceptionHandler {
         String message = String.format("%s 입력은 필수입니다.", ex.getRequestPartName());
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.BAD_REQUEST, message);
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.BAD_REQUEST.getHttpStatus());
     }
 
     /**
@@ -213,7 +210,7 @@ public class ServiceExceptionHandler {
         ApiResponse<Void> response = ApiResponse.createApiResponseFromCommonError(ServiceError.METHOD_NOT_ALLOWED, message);
 
         log.error(response.message(), ex);
-        return new ResponseEntity<>(response, response.status());
+        return new ResponseEntity<>(response, ServiceError.METHOD_NOT_ALLOWED.getHttpStatus());
     }
 
     private Set<Class<? extends Payload>> getPayloads(FieldError error) {

@@ -32,8 +32,8 @@ public class ProductCategoriesFacade {
     }
 
     public PagingResponse<ProductCategoryCollectionResponse> findAllProductCategoryConditions(
-            Long productId, String productName, String productCategoryPath,
-            Integer price1, Integer price2, Integer discountRate, Pageable pageable) {
+            final Long productId, final String productName, final String productCategoryPath,
+            final Integer price1, final Integer price2, final Integer discountRate, final Pageable pageable) {
 
         ProductCategoryType productCategoryType = ProductCategoryType.of(productCategoryPath)
                 .orElseThrow(() ->  new ProductCategoryException(ProductCategoryError.INVALID_PRODUCT_CATEGORY_PATH));
