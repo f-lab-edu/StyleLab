@@ -1,8 +1,6 @@
 package com.stylelab.common.security.filter;
 
 import com.stylelab.common.security.constant.UserType;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,15 +19,5 @@ public class UserTypeRequestScope {
 
     public void  createUserType(String type) {
         this.userType = UserType.of(type);
-    }
-
-    @PostConstruct
-    public void init() {
-        System.out.println("request scope bean create" + this);
-    }
-
-    @PreDestroy
-    public void close() {
-        System.out.println("request scope bean close" + this);
     }
 }

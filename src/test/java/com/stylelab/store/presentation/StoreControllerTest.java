@@ -2,7 +2,6 @@ package com.stylelab.store.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stylelab.common.annotation.WithAccount;
-import com.stylelab.common.exception.ServiceError;
 import com.stylelab.common.security.constant.UserType;
 import com.stylelab.store.exception.StoreError;
 import com.stylelab.store.presentation.request.ApplyStoreRequest;
@@ -864,8 +863,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     //then
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+                    .andExpect(jsonPath("$.code").value("20000"))
+                    .andExpect(jsonPath("$.message").value("success"));
         }
 
         @Test
@@ -945,8 +944,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     //then
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+                    .andExpect(jsonPath("$.code").value("20000"))
+                    .andExpect(jsonPath("$.message").value("success"));
         }
 
         @Test
@@ -1060,8 +1059,8 @@ public class StoreControllerTest {
                     .andDo(print())
                     //then
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+                    .andExpect(jsonPath("$.code").value("20000"))
+                    .andExpect(jsonPath("$.message").value("success"));
         }
     }
 }

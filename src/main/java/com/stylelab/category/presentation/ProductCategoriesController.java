@@ -8,7 +8,6 @@ import com.stylelab.common.dto.PagingResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,15 +30,14 @@ public class ProductCategoriesController {
 
     @GetMapping("/{productCategoryPath}")
     public ResponseEntity<ApiResponse<PagingResponse<ProductCategoryCollectionResponse>>> findByProductByConditions(
-            @PathVariable(name = "productCategoryPath", required = false) String productCategoryPath,
-            @RequestParam(name = "productId", required = false) Long productId,
-            @RequestParam(name = "productName", required = false) String productName,
-            @RequestParam(name = "price1", required = false) Integer price1,
-            @RequestParam(name = "price2", required = false) Integer price2,
-            @RequestParam(name = "discountRate", required = false) Integer discountRate,
+            @PathVariable(name = "productCategoryPath", required = false) final String productCategoryPath,
+            @RequestParam(name = "nextToken", required = false) final Long productId,
+            @RequestParam(name = "productName", required = false) final String productName,
+            @RequestParam(name = "price1", required = false) final Integer price1,
+            @RequestParam(name = "price2", required = false) final Integer price2,
+            @RequestParam(name = "discountRate", required = false) final Integer discountRate,
             Pageable pageable) {
 
-        new ResponseEntity<>(null, HttpStatus.OK);
         return ResponseEntity.ok(
                 ApiResponse.createApiResponse(
                         productCategoriesFacade.findAllProductCategoryConditions(

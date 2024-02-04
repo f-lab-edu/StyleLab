@@ -2,7 +2,6 @@ package com.stylelab.user.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stylelab.common.annotation.WithAccount;
-import com.stylelab.common.exception.ServiceError;
 import com.stylelab.common.security.constant.UserType;
 import com.stylelab.user.exception.UsersError;
 import com.stylelab.user.presentation.request.CreateUserDeliveryAddressRequest;
@@ -450,8 +449,8 @@ public class UsersControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andDo(print())
                     .andExpect(status().isNoContent())
-                    .andExpect(jsonPath("$.code").value(ServiceError.OK.getCode()))
-                    .andExpect(jsonPath("$.message").value(ServiceError.OK.getMessage()));
+                    .andExpect(jsonPath("$.code").value("20000"))
+                    .andExpect(jsonPath("$.message").value("success"));
         }
 
         @Test
