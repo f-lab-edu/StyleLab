@@ -29,4 +29,6 @@ Java 17, Spring Boot 3.2.1, Spring Data JPA, QueryDSL JPA, MySQL 8, Github Actio
 - [MySQL 서버 구축](https://rbsks.tistory.com/65)
 
 # [💾 StyleLab ERD](https://www.erdcloud.com/d/eACgzLZ7bAuh4Q46i)
+![스크린샷 2024-02-08 오후 11 07 55](https://github.com/rbsks/jenkins-practice/assets/67041069/a1e5c195-8e09-491e-ba4d-ce2ec4997cda)
+![스크린샷 2024-02-08 오후 11 10 16](https://github.com/rbsks/jenkins-practice/assets/67041069/6017ccca-c236-4cfa-806e-f5d8cd189aba)
 # [📔 StyleLab API 명세서](https://fringe-actress-f29.notion.site/API-067ba533d0d443ffad09c29c9d6cf4fe?pvs=4)
