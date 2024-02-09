@@ -21,6 +21,7 @@
 Java 17, Spring Boot 3.2.1, Spring Data JPA, QueryDSL JPA, MySQL 8, Github Actions, Pinpoint, Ehcache 3, Spring Security, JdbcClient, nGrinder
 
 # 개발 기술 블로그
+- [상품 목록 조회 성능 테스트](https://rbsks.tistory.com/71)
 - [상품 목록 조회 최적화를 위한 파티셔닝 - 2](https://rbsks.tistory.com/70)
 - [상품 목록 조회 최적화를 위한 파티셔닝 - 1](https://rbsks.tistory.com/69)
 - [Ehcache 적용기](https://rbsks.tistory.com/68)
